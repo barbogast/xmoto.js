@@ -1,3 +1,5 @@
+import $ from 'jquery'
+
 var Input
 
 Input = (function () {

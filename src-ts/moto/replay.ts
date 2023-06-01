@@ -1,3 +1,5 @@
+import $ from 'jquery'
+
 import Constants from '../constants.js'
 import ReplayConversionService from '../services/replay_conversion_service.js'
 

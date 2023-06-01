@@ -1,3 +1,5 @@
+import $ from 'jquery'
+
 import Edges from './edges.js'
 import Constants from '../constants.js'
 

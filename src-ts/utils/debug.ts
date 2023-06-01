@@ -1,3 +1,5 @@
+import $ from 'jquery'
+
 import Constants from '../constants.js'
 
 var bind_debug_button,
@@ -120,8 +122,7 @@ create_form_with_url_params = function (params) {
 
 $(function () {
   var params
-  // @ts-ignore
-  params = $.url().param()
+  params = new URLSearchParams(window.location.search)
   if (Constants.debug || params.debug === 'true') {
     $('.debug').show()
     $('.debug-button').hide()

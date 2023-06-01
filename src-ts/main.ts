@@ -1,4 +1,5 @@
 import Stats from 'stats.js'
+import $ from 'jquery'
 
 import Level from './level.js'
 import Constants from './constants.js'

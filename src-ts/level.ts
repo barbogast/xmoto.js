@@ -1,3 +1,5 @@
+import $ from 'jquery'
+
 import Camera from './camera.js'
 import Assets from './utils/assets.js'
 import Physics from './physics.js'

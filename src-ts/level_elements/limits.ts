@@ -1,3 +1,5 @@
+import $ from 'jquery'
+
 import Constants from '../constants.js'
 
 var Limits, b2AABB, b2Vec2

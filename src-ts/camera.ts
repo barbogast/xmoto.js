@@ -1,3 +1,5 @@
+import $ from 'jquery'
+
 import Constants from './constants.js'
 import Math2D from './utils/math2d.js'
 

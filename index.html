@@ -3293,23 +3293,23 @@
     </div>
     <div style="clear:both"></div>
 
-    <script src="lib/jquery-1.10.2.js"       type="text/javascript"></script>
     <script src="lib/pixi-5.0.4.min.js"      type="text/javascript"></script>
     <script src="lib/Box2dWeb-2.1.a.3.js"    type="text/javascript"></script>
-    <script src="lib/purl-2.3.1.js"          type="text/javascript"></script>
 
     <script type="module" src="/src-ts/main.ts"></script>
 
     <script type="module">
+      import $ from 'jquery'
+
       $(document).ready(function(){
-        var params = $.url().param()
+        const params = new URLSearchParams(window.location.search)
         var options = { width: 1000, height: 600, debug: params.debug == 'true' }
 
         // Change on select
         $("#levels").on('change', function(){ $.xmoto($(this).val(), options) })
 
         // level in URL params
-        let level = $.url().param('level')
+        let level = params.level
         if(level) {
           $("#levels").val("l" + level + ".lvl")
         }

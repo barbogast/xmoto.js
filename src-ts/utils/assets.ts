@@ -1,3 +1,5 @@
+import $ from 'jquery'
+
 import Theme from './theme.js'
 
 var Assets

@@ -1,3 +1,5 @@
+import $ from 'jquery'
+
 var Infos
 
 Infos = (function () {

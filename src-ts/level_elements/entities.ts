@@ -1,3 +1,5 @@
+import $ from 'jquery'
+
 import Constants from '../constants.js'
 
 var Entities, b2FixtureDef, b2CircleShape, b2Body, b2BodyDef, b2AABB
