@@ -61,3 +61,5 @@ Math2D = (function () {
 
   return Math2D
 })()
+
+export default Math2D

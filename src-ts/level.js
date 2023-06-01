@@ -1,3 +1,20 @@
+import Camera from './camera.js'
+import Assets from './utils/assets.js'
+import Physics from './physics.js'
+import Input from './input.js'
+import Listeners from './listeners.js'
+import Moto from './moto/moto.js'
+import Particles from './moto/particles.js'
+import Infos from './level_elements/infos.js'
+import Sky from './level_elements/sky.js'
+import Blocks from './level_elements/blocks.js'
+import Limits from './level_elements/limits.js'
+import LayerOffsets from './level_elements/layer_offsets.js'
+import Script from './level_elements/script.js'
+import Entities from './level_elements/entities.js'
+import Replay from './moto/replay.js'
+import Ghosts from './moto/ghosts.js'
+
 var Level, b2AABB, b2Vec2
 
 b2AABB = Box2D.Collision.b2AABB
@@ -163,3 +180,5 @@ Level = (function () {
 
   return Level
 })()
+
+export default Level

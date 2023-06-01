@@ -1,6 +1,16 @@
-var Entities, b2FixtureDef
+import Constants from '../constants.js'
+
+var Entities, b2FixtureDef, b2CircleShape, b2Body, b2BodyDef, b2AABB
 
 b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+
+b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
+
+b2Body = Box2D.Dynamics.b2Body.b2_staticBody
+
+b2BodyDef = Box2D.Dynamics.b2BodyDef
+
+b2AABB = Box2D.Collision.b2AABB
 
 Entities = (function () {
   function Entities(level) {
@@ -311,3 +321,5 @@ Entities = (function () {
 
   return Entities
 })()
+
+export default Entities

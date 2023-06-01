@@ -1,3 +1,5 @@
+import Constants from '../constants.js'
+
 var Replay
 
 Replay = (function () {
@@ -190,3 +192,5 @@ Replay = (function () {
 
   return Replay
 })()
+
+export default Replay

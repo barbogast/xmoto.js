@@ -1,3 +1,6 @@
+import Edges from './edges.js'
+import Constants from '../constants.js'
+
 var Blocks, b2AABB, b2Vec2
 
 b2Vec2 = Box2D.Common.Math.b2Vec2
@@ -264,3 +267,5 @@ Blocks = (function () {
 
   return Blocks
 })()
+
+export default Blocks

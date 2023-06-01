@@ -1,3 +1,5 @@
+import Constants from '../constants.js'
+
 var Ghosts
 
 Ghosts = (function () {
@@ -119,3 +121,5 @@ Ghosts = (function () {
 
   return Ghosts
 })()
+
+export default Ghosts

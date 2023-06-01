@@ -19,3 +19,5 @@ Script = (function () {
 
   return Script
 })()
+
+export default Script

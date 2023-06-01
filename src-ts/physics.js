@@ -1,3 +1,5 @@
+import Constants from './constants.js'
+
 var Physics,
   b2AABB,
   b2Body,
@@ -242,3 +244,5 @@ Physics = (function () {
 
   return Physics
 })()
+
+export default Physics

@@ -1,3 +1,5 @@
+import Constants from '../constants.js'
+
 var bind_debug_button,
   bind_delete_params_buttons,
   create_form_with_url_params,

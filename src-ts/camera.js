@@ -1,4 +1,11 @@
-var Camera
+import Constants from './constants.js'
+import Math2D from './utils/math2d.js'
+
+var Camera, b2Vec2, b2AABB
+
+b2Vec2 = Box2D.Common.Math.b2Vec2
+
+b2AABB = Box2D.Collision.b2AABB
 
 Camera = (function () {
   function Camera(level) {
@@ -184,3 +191,5 @@ Camera = (function () {
 
   return Camera
 })()
+
+export default Camera

@@ -28,3 +28,5 @@ LayerOffsets = (function () {
 
   return LayerOffsets
 })()
+
+export default LayerOffsets

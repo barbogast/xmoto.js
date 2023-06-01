@@ -1,3 +1,8 @@
+import Rider from './rider.js'
+import Constants from '../constants.js'
+import Physics from '../physics.js'
+import Math2D from '../utils/math2d.js'
+
 var Moto,
   b2Body,
   b2BodyDef,
@@ -7,7 +12,8 @@ var Moto,
   b2PolygonShape,
   b2PrismaticJointDef,
   b2RevoluteJointDef,
-  b2Vec2
+  b2Vec2,
+  b2AABB
 
 b2Vec2 = Box2D.Common.Math.b2Vec2
 
@@ -26,6 +32,8 @@ b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
 b2PrismaticJointDef = Box2D.Dynamics.Joints.b2PrismaticJointDef
 
 b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef
+
+b2AABB = Box2D.Collision.b2AABB
 
 Moto = (function () {
   function Moto(level, ghost) {
@@ -531,3 +539,5 @@ Moto = (function () {
 
   return Moto
 })()
+
+export default Moto

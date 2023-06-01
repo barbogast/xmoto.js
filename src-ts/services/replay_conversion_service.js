@@ -167,3 +167,5 @@ ReplayConversionService = (function () {
 
   return ReplayConversionService
 })()
+
+export default ReplayConversionService

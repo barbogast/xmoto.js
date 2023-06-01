@@ -106,3 +106,5 @@ Input = (function () {
 
   return Input
 })()
+
+export default Input

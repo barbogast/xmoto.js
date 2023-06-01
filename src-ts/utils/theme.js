@@ -72,3 +72,5 @@ Theme = (function () {
 
   return Theme
 })()
+
+export default Theme

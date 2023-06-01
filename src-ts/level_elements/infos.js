@@ -27,3 +27,5 @@ Infos = (function () {
 
   return Infos
 })()
+
+export default Infos

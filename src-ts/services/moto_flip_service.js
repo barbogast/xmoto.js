@@ -132,3 +132,5 @@ MotoFlipService = (function () {
 
   return MotoFlipService
 })()
+
+export default MotoFlipService

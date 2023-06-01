@@ -1,3 +1,6 @@
+import Level from './level.js'
+import Constants from './constants.js'
+
 $.xmoto = function (level_filename, options) {
   var bind_render_to_dom,
     bind_stats_fps,

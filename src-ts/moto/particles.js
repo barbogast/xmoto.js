@@ -57,3 +57,5 @@ Particles = (function () {
 
   return Particles
 })()
+
+export default Particles

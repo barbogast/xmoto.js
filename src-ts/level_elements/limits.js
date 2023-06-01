@@ -1,3 +1,5 @@
+import Constants from '../constants.js'
+
 var Limits, b2AABB, b2Vec2
 
 b2Vec2 = Box2D.Common.Math.b2Vec2
@@ -233,3 +235,5 @@ Limits = (function () {
 
   return Limits
 })()
+
+export default Limits

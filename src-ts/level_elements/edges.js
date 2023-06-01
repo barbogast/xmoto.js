@@ -1,3 +1,6 @@
+import Math2D from '../utils/math2d.js'
+import Constants from '../constants.js'
+
 var Edges, b2AABB, b2Vec2
 
 b2Vec2 = Box2D.Common.Math.b2Vec2
@@ -189,3 +192,5 @@ Edges = (function () {
 
   return Edges
 })()
+
+export default Edges

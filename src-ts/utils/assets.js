@@ -1,3 +1,5 @@
+import Theme from './theme.js'
+
 var Assets
 
 Assets = (function () {
@@ -114,3 +116,5 @@ Assets = (function () {
 
   return Assets
 })()
+
+export default Assets

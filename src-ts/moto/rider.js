@@ -1,3 +1,6 @@
+import Constants from '../constants.js'
+import Physics from '../physics.js'
+
 var Rider,
   b2Body,
   b2BodyDef,
@@ -297,3 +300,5 @@ Rider = (function () {
 
   return Rider
 })()
+
+export default Rider

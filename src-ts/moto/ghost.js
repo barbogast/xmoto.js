@@ -76,3 +76,5 @@ Ghost = (function () {
 
   return Ghost
 })()
+
+export default Ghost
