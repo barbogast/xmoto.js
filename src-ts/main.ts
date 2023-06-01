@@ -1,3 +1,5 @@
+import Stats from 'stats.js'
+
 import Level from './level.js'
 import Constants from './constants.js'
 
@@ -68,7 +70,6 @@ $.xmoto = function (level_filename, options) {
   }
   bind_stats_fps = function () {
     var stats
-    // @ts-ignore
     stats = new Stats()
     stats.showPanel(0)
     $('#xmoto')[0].appendChild(stats.dom)
@@ -77,7 +78,6 @@ $.xmoto = function (level_filename, options) {
   }
   bind_stats_ms = function () {
     var stats
-    // @ts-ignore
     stats = new Stats()
     stats.showPanel(1)
     $('#xmoto')[0].appendChild(stats.dom)
