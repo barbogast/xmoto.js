@@ -38,6 +38,7 @@ Assets = (function () {
       ref2,
       ref3,
       ref4
+    // @ts-ignore
     PIXI.Loader.shared.reset()
     items = []
     ref = this.textures
@@ -75,8 +76,10 @@ Assets = (function () {
     ref4 = this.remove_duplicate_textures(items)
     for (m = 0, len4 = ref4.length; m < len4; m++) {
       item = ref4[m]
+      // @ts-ignore
       PIXI.Loader.shared.add(item.id, item.src)
     }
+    // @ts-ignore
     return PIXI.Loader.shared.load(
       (function (_this) {
         return function (loader, resources) {

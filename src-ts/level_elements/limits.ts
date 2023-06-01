@@ -1,9 +1,9 @@
 import Constants from '../constants.js'
 
 var Limits, b2AABB, b2Vec2
-
+// @ts-ignore
 b2Vec2 = Box2D.Common.Math.b2Vec2
-
+// @ts-ignore
 b2AABB = Box2D.Collision.b2AABB
 
 Limits = (function () {
@@ -169,6 +169,7 @@ Limits = (function () {
       texture,
       top_size_x,
       top_size_y
+    // @ts-ignore
     texture = PIXI.Texture.from(this.assets.get_url(this.texture_name))
     left_size_x = this.player.left - this.screen.left
     left_size_y = this.screen.top - this.screen.bottom
@@ -178,17 +179,21 @@ Limits = (function () {
     bottom_size_y = this.player.bottom - this.screen.bottom
     top_size_x = this.player.right - this.player.left
     top_size_y = this.screen.top - this.player.top
+    // @ts-ignore
     this.left_sprite = new PIXI.TilingSprite(texture, left_size_x, left_size_y)
+    // @ts-ignore
     this.right_sprite = new PIXI.TilingSprite(
       texture,
       right_size_x,
       right_size_y
     )
+    // @ts-ignore
     this.bottom_sprite = new PIXI.TilingSprite(
       texture,
       bottom_size_x,
       bottom_size_y
     )
+    // @ts-ignore
     this.top_sprite = new PIXI.TilingSprite(texture, top_size_x, top_size_y)
     this.left_sprite.x = this.screen.left
     this.left_sprite.y = -this.screen.top

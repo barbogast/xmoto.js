@@ -1,15 +1,15 @@
 import Constants from '../constants.js'
 
 var Entities, b2FixtureDef, b2CircleShape, b2Body, b2BodyDef, b2AABB
-
+// @ts-ignore
 b2FixtureDef = Box2D.Dynamics.b2FixtureDef
-
+// @ts-ignore
 b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
-
+// @ts-ignore
 b2Body = Box2D.Dynamics.b2Body.b2_staticBody
-
+// @ts-ignore
 b2BodyDef = Box2D.Dynamics.b2BodyDef
-
+// @ts-ignore
 b2AABB = Box2D.Collision.b2AABB
 
 Entities = (function () {
@@ -219,14 +219,17 @@ Entities = (function () {
         i = 0 <= ref ? ++j : --j
       ) {
         textures.push(
+          // @ts-ignore
           PIXI.Texture.from(this.assets.get_url(this.frame_name(entity, i)))
         )
       }
+      // @ts-ignore
       entity.sprite = new PIXI.AnimatedSprite(textures)
       entity.sprite.animationSpeed = 0.5 - 0.5 * entity.delay
       entity.sprite.play()
       container.addChild(entity.sprite)
     } else if (entity.file) {
+      // @ts-ignore
       entity.sprite = new PIXI.Sprite.from(this.assets.get_url(entity.file))
       container.addChild(entity.sprite)
     }

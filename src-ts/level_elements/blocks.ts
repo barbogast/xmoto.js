@@ -3,8 +3,9 @@ import Constants from '../constants.js'
 
 var Blocks, b2AABB, b2Vec2
 
+// @ts-ignore
 b2Vec2 = Box2D.Common.Math.b2Vec2
-
+// @ts-ignore
 b2AABB = Box2D.Collision.b2AABB
 
 Blocks = (function () {
@@ -176,17 +177,21 @@ Blocks = (function () {
       ref1 = block.vertices
       for (j = 0, len1 = ref1.length; j < len1; j++) {
         vertex = ref1[j]
+        // @ts-ignore
         points.push(new PIXI.Point(vertex.x, -vertex.y))
       }
+      // @ts-ignore
       mask = new PIXI.Graphics()
       mask.beginFill(0xffffff, 1.0)
       mask.drawPolygon(points)
       mask.x = block.position.x
       mask.y = -block.position.y
       this.level.camera.neutral_z_container.addChild(mask)
+      // @ts-ignore
       texture = PIXI.Texture.from(this.assets.get_url(block.texture_name))
       size_x = block.aabb.upperBound.x - block.aabb.lowerBound.x
       size_y = block.aabb.upperBound.y - block.aabb.lowerBound.y
+      // @ts-ignore
       block.sprite = new PIXI.TilingSprite(texture, size_x, size_y)
       block.sprite.x = block.aabb.lowerBound.x
       block.sprite.y = -block.aabb.upperBound.y

@@ -1,3 +1,5 @@
+import Moto from './moto.js'
+
 var Ghost
 
 Ghost = (function () {

@@ -1,6 +1,7 @@
 import Level from './level.js'
 import Constants from './constants.js'
 
+// @ts-ignore
 $.xmoto = function (level_filename, options) {
   var bind_render_to_dom,
     bind_stats_fps,
@@ -14,7 +15,9 @@ $.xmoto = function (level_filename, options) {
   initialize = function () {
     var renderer
     options = load_options(options)
+    // @ts-ignore
     PIXI.settings.MIPMAP_TEXTURES = PIXI.MIPMAP_MODES.OFF
+    // @ts-ignore
     renderer = new PIXI.Renderer({
       width: options.width,
       height: options.height,
@@ -22,6 +25,7 @@ $.xmoto = function (level_filename, options) {
       clearBeforeRender: false,
       preserveDrawingBuffer: true,
     })
+    // @ts-ignore
     window.cancelAnimationFrame(window.game_loop)
     bind_render_to_dom(renderer, options)
     return main_loop(level_filename, renderer, options)
@@ -64,6 +68,7 @@ $.xmoto = function (level_filename, options) {
   }
   bind_stats_fps = function () {
     var stats
+    // @ts-ignore
     stats = new Stats()
     stats.showPanel(0)
     $('#xmoto')[0].appendChild(stats.dom)
@@ -72,6 +77,7 @@ $.xmoto = function (level_filename, options) {
   }
   bind_stats_ms = function () {
     var stats
+    // @ts-ignore
     stats = new Stats()
     stats.showPanel(1)
     $('#xmoto')[0].appendChild(stats.dom)
@@ -105,6 +111,7 @@ $.xmoto = function (level_filename, options) {
             if (!Constants.debug_physics) {
               renderer.render(level.stage)
             }
+            // @ts-ignore
             window.game_loop = requestAnimationFrame(update)
             if (Constants.debug) {
               stats_fps.end()

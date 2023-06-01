@@ -1,5 +1,5 @@
 var Constants, b2Vec2
-
+// @ts-ignore
 b2Vec2 = Box2D.Common.Math.b2Vec2
 
 Constants = (function () {

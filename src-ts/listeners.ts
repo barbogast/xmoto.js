@@ -19,6 +19,7 @@ Listeners = (function () {
 
   Listeners.prototype.init = function () {
     var listener
+    // @ts-ignore
     listener = new Box2D.Dynamics.b2ContactListener()
     listener.BeginContact = (function (_this) {
       return function (contact) {

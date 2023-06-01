@@ -2,6 +2,7 @@ import Rider from './rider.js'
 import Constants from '../constants.js'
 import Physics from '../physics.js'
 import Math2D from '../utils/math2d.js'
+import MotoFlipService from '../services/moto_flip_service.js'
 
 var Moto,
   b2Body,
@@ -14,25 +15,25 @@ var Moto,
   b2RevoluteJointDef,
   b2Vec2,
   b2AABB
-
+// @ts-ignore
 b2Vec2 = Box2D.Common.Math.b2Vec2
-
+// @ts-ignore
 b2BodyDef = Box2D.Dynamics.b2BodyDef
-
+// @ts-ignore
 b2Body = Box2D.Dynamics.b2Body
-
+// @ts-ignore
 b2FixtureDef = Box2D.Dynamics.b2FixtureDef
-
+// @ts-ignore
 b2Fixture = Box2D.Dynamics.b2Fixture
-
+// @ts-ignore
 b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
-
+// @ts-ignore
 b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
-
+// @ts-ignore
 b2PrismaticJointDef = Box2D.Dynamics.Joints.b2PrismaticJointDef
-
+// @ts-ignore
 b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef
-
+// @ts-ignore
 b2AABB = Box2D.Collision.b2AABB
 
 Moto = (function () {
@@ -126,6 +127,7 @@ Moto = (function () {
       } else {
         asset_name = Constants[part].texture
       }
+      // @ts-ignore
       this[part + '_sprite'] = new PIXI.Sprite.from(
         this.assets.get_url(asset_name)
       )

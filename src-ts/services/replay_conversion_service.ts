@@ -1,3 +1,5 @@
+import Constants from '../constants.js'
+
 var ReplayConversionService
 
 ReplayConversionService = (function () {
@@ -31,12 +33,14 @@ ReplayConversionService = (function () {
       string += '|'
     }
     string = string.slice(0, -1)
+    // @ts-ignore
     return LZString.compressToBase64(string)
   }
 
   ReplayConversionService.string_to_inputs = function (string) {
     var i, inputs, j, k, key, keys, len, len1, name, splitted, step, values
     inputs = {}
+    // @ts-ignore
     string = LZString.decompressFromBase64(string)
     keys = string.split('|')
     for (j = 0, len = keys.length; j < len; j++) {
@@ -98,6 +102,7 @@ ReplayConversionService = (function () {
     if (string[string.length - 1] === '=') {
       string = string.slice(0, -1)
     }
+    // @ts-ignore
     return LZString.compressToBase64(string)
   }
 
@@ -119,6 +124,7 @@ ReplayConversionService = (function () {
       step_interval,
       value_string
     key_steps = {}
+    // @ts-ignore
     string = LZString.decompressFromBase64(string)
     key_steps_string = string.split('@')[1]
     step_interval = parseInt(string.split('@')[0])

@@ -8,12 +8,13 @@ var bind_debug_button,
 
 bind_debug_button = function () {
   $('#debug .debug-button').on('click', function () {
-    window.location =
+    ;(window as Window).location =
       '?level=' + $('#levels option:selected').text() + '&debug=true'
     return false
   })
   return $('.normal-button').on('click', function () {
-    window.location = '?level=' + $('#levels option:selected').text()
+    ;(window as Window).location =
+      '?level=' + $('#levels option:selected').text()
     return false
   })
 }
@@ -119,6 +120,7 @@ create_form_with_url_params = function (params) {
 
 $(function () {
   var params
+  // @ts-ignore
   params = $.url().param()
   if (Constants.debug || params.debug === 'true') {
     $('.debug').show()

@@ -37,7 +37,9 @@ Sky = (function () {
 
   Sky.prototype.init_sprites = function () {
     var texture
+    // @ts-ignore
     texture = PIXI.Texture.from(this.assets.get_url(this.filename))
+    // @ts-ignore
     this.sprite = new PIXI.TilingSprite(
       texture,
       this.options.width,

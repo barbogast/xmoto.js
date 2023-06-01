@@ -1,4 +1,6 @@
 import Constants from '../constants.js'
+import Ghost from './ghost.js'
+import Replay from './replay.js'
 
 var Ghosts
 

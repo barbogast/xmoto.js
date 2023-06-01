@@ -1,4 +1,5 @@
 import Constants from './constants.js'
+import Ghost from './moto/ghost.js'
 
 var Physics,
   b2AABB,
@@ -16,35 +17,35 @@ var Physics,
   b2Settings,
   b2Vec2,
   b2World
-
+// @ts-ignore
 b2World = Box2D.Dynamics.b2World
-
+// @ts-ignore
 b2Vec2 = Box2D.Common.Math.b2Vec2
-
+// @ts-ignore
 b2AABB = Box2D.Collision.b2AABB
-
+// @ts-ignore
 b2BodyDef = Box2D.Dynamics.b2BodyDef
-
+// @ts-ignore
 b2Body = Box2D.Dynamics.b2Body
-
+// @ts-ignore
 b2FixtureDef = Box2D.Dynamics.b2FixtureDef
-
+// @ts-ignore
 b2Fixture = Box2D.Dynamics.b2Fixture
-
+// @ts-ignore
 b2MassData = Box2D.Collision.Shapes.b2MassData
-
+// @ts-ignore
 b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
-
+// @ts-ignore
 b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
-
+// @ts-ignore
 b2EdgeShape = Box2D.Collision.Shapes.b2EdgeShape
-
+// @ts-ignore
 b2EdgeChainDef = Box2D.Collision.Shapes.b2EdgeChainDef
-
+// @ts-ignore
 b2DebugDraw = Box2D.Dynamics.b2DebugDraw
-
+// @ts-ignore
 b2MouseJointDef = Box2D.Dynamics.Joints.b2MouseJointDef
-
+// @ts-ignore
 b2Settings = Box2D.Common.b2Settings
 
 Physics = (function () {
@@ -222,7 +223,7 @@ Physics = (function () {
     return results
   }
 
-  Physics.create_shape = function (fix_def, shape, mirror) {
+  Physics.create_shape = function (fix_def, shape, mirror?: boolean) {
     var b2vertices, j, k, len, len1, vertex
     if (mirror == null) {
       mirror = false

@@ -2,9 +2,9 @@ import Constants from './constants.js'
 import Math2D from './utils/math2d.js'
 
 var Camera, b2Vec2, b2AABB
-
+// @ts-ignore
 b2Vec2 = Box2D.Common.Math.b2Vec2
-
+// @ts-ignore
 b2AABB = Box2D.Collision.b2AABB
 
 Camera = (function () {
@@ -19,10 +19,15 @@ Camera = (function () {
       x: 0,
       y: 0,
     }
+    // @ts-ignore
     this.scale_container = new PIXI.Container()
+    // @ts-ignore
     this.translate_container = new PIXI.Container()
+    // @ts-ignore
     this.negative_z_container = new PIXI.Container()
+    // @ts-ignore
     this.neutral_z_container = new PIXI.Container()
+    // @ts-ignore
     this.positive_z_container = new PIXI.Container()
     this.level.stage.addChild(this.scale_container)
     this.scale_container.addChild(this.translate_container)
@@ -40,6 +45,7 @@ Camera = (function () {
       $('#xmoto-debug').show()
     }
     if (Constants.debug_clipping) {
+      // @ts-ignore
       this.clipping = new PIXI.Graphics()
       this.clipping.alpha = 0.2
       this.translate_container.addChild(this.clipping)

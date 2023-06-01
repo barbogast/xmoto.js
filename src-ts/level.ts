@@ -16,16 +16,18 @@ import Replay from './moto/replay.js'
 import Ghosts from './moto/ghosts.js'
 
 var Level, b2AABB, b2Vec2
-
+// @ts-ignore
 b2AABB = Box2D.Collision.b2AABB
-
+// @ts-ignore
 b2Vec2 = Box2D.Common.Math.b2Vec2
 
 Level = (function () {
   function Level(renderer, options) {
     this.renderer = renderer
     this.options = options
+    // @ts-ignore
     this.debug_ctx = $('#xmoto-debug').get(0).getContext('2d')
+    // @ts-ignore
     this.stage = new PIXI.Container()
     this.assets = new Assets()
     this.camera = new Camera(this)
