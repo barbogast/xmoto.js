@@ -6,7 +6,7 @@
     "express": "^4.17.1"
   },
   "scripts": {
-    "prettier-format-all": "yarn prettier --write src-ts",
+    "prettier-format-all": "yarn prettier --write src",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
