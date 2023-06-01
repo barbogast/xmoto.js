@@ -3317,6 +3317,7 @@
         }
 
         // prev buttons
+        let level_name
         $("#prev-level").on('click', function() {
           level_name = $("#levels option:selected").prev().prop('selected', true).val()
           level_name ? $.xmoto(level_name, options) : alert('This is the first level')
