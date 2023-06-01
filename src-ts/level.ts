@@ -25,8 +25,9 @@ Level = (function () {
   function Level(renderer, options) {
     this.renderer = renderer
     this.options = options
-    // @ts-ignore
-    this.debug_ctx = $('#xmoto-debug').get(0).getContext('2d')
+    this.debug_ctx = ($('#xmoto-debug').get(0) as HTMLCanvasElement).getContext(
+      '2d'
+    )
     // @ts-ignore
     this.stage = new PIXI.Container()
     this.assets = new Assets()
