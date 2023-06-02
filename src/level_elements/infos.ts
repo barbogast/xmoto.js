@@ -1,14 +1,25 @@
 import $ from 'jquery'
 
-var Infos
+class Infos {
+  level: any
+  assets: any
+  identifier: any
+  pack_name: any
+  pack_id: any
+  r_version: any
+  name: any
+  description: any
+  author: any
+  date: any
+  border: any
+  music: any
 
-Infos = (function () {
-  function Infos(level) {
+  constructor(level) {
     this.level = level
     this.assets = level.assets
   }
 
-  Infos.prototype.parse = function (xml) {
+  parse(xml) {
     var xml_border, xml_infos, xml_level, xml_music
     xml_level = $(xml).find('level')
     this.identifier = xml_level.attr('id')
@@ -26,8 +37,6 @@ Infos = (function () {
     this.music = xml_music.attr('name')
     return this
   }
-
-  return Infos
-})()
+}
 
 export default Infos

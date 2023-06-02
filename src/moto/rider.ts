@@ -1,9 +1,8 @@
 import Constants from '../constants.js'
 import Physics from '../physics.js'
-import Math2D from '../utils/math2d.js'
+import * as Math2D from '../utils/math2d.js'
 
-var Rider,
-  b2Body,
+var b2Body,
   b2BodyDef,
   b2CircleShape,
   b2Fixture,
@@ -31,8 +30,35 @@ b2PrismaticJointDef = Box2D.Dynamics.Joints.b2PrismaticJointDef
 // @ts-ignore
 b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef
 
-Rider = (function () {
-  function Rider(level, moto) {
+class Rider {
+  level: any
+  assets: any
+  world: any
+  moto: any
+  mirror: any
+  ghost: any
+  player_start: any
+  neck_joint: any
+  ankle_joint: any
+  wrist_joint: any
+  knee_joint: any
+  elbow_joint: any
+  shoulder_joint: any
+  hip_joint: any
+  head: any
+  torso: any
+  lower_leg: any
+  upper_leg: any
+  lower_arm: any
+  upper_arm: any
+  head_sprite: any
+  torso_sprite: any
+  lower_leg_sprite: any
+  upper_leg_sprite: any
+  lower_arm_sprite: any
+  upper_arm_sprite: any
+
+  constructor(level, moto) {
     this.level = level
     this.assets = level.assets
     this.world = level.physics.world
@@ -41,7 +67,7 @@ Rider = (function () {
     this.ghost = moto.ghost
   }
 
-  Rider.prototype.destroy = function () {
+  destroy() {
     this.world.DestroyBody(this.head)
     this.world.DestroyBody(this.torso)
     this.world.DestroyBody(this.lower_leg)
@@ -58,7 +84,7 @@ Rider = (function () {
     )
   }
 
-  Rider.prototype.load_assets = function () {
+  load_assets() {
     var i, len, part, parts, results
     parts = [
       Constants.torso,
@@ -79,7 +105,7 @@ Rider = (function () {
     return results
   }
 
-  Rider.prototype.init_physics_parts = function () {
+  init_physics_parts() {
     this.player_start = this.level.entities.player_start
     this.head = this.create_head()
     this.torso = this.create_part(Constants.torso, 'torso')
@@ -122,7 +148,7 @@ Rider = (function () {
     ))
   }
 
-  Rider.prototype.init_sprites = function () {
+  init_sprites() {
     var asset_name, i, len, part, ref, results
     ref = ['torso', 'upper_leg', 'lower_leg', 'upper_arm', 'lower_arm']
     results = []
@@ -144,11 +170,11 @@ Rider = (function () {
     return results
   }
 
-  Rider.prototype.position = function () {
+  position() {
     return this.moto.body.GetPosition()
   }
 
-  Rider.prototype.eject = function () {
+  eject() {
     var adjusted_force_vector, eject_angle, force_vector
     if (!this.moto.dead) {
       this.level.listeners.kill_moto(this.moto)
@@ -168,7 +194,7 @@ Rider = (function () {
     }
   }
 
-  Rider.prototype.create_head = function () {
+  create_head() {
     var body, bodyDef, fixDef
     fixDef = new b2FixtureDef()
     fixDef.shape = new b2CircleShape(Constants.head.radius)
@@ -193,7 +219,7 @@ Rider = (function () {
     return body
   }
 
-  Rider.prototype.create_part = function (part_constants, name) {
+  create_part(part_constants, name) {
     var body, bodyDef, fixDef
     fixDef = new b2FixtureDef()
     fixDef.shape = new b2PolygonShape()
@@ -220,7 +246,7 @@ Rider = (function () {
     return body
   }
 
-  Rider.prototype.set_joint_commons = function (joint) {
+  set_joint_commons(joint) {
     if (this.mirror === 1) {
       joint.lowerAngle = -Math.PI / 15
       joint.upperAngle = Math.PI / 108
@@ -231,7 +257,7 @@ Rider = (function () {
     return (joint.enableLimit = true)
   }
 
-  Rider.prototype.create_neck_joint = function () {
+  create_neck_joint() {
     var axe, jointDef, position
     position = this.head.GetWorldCenter()
     axe = {
@@ -243,12 +269,7 @@ Rider = (function () {
     return this.world.CreateJoint(jointDef)
   }
 
-  Rider.prototype.create_joint = function (
-    joint_constants,
-    part1,
-    part2,
-    invert_joint
-  ) {
+  create_joint(joint_constants, part1, part2, invert_joint?) {
     var axe, jointDef, position
     if (invert_joint == null) {
       invert_joint = false
@@ -268,7 +289,7 @@ Rider = (function () {
     return this.world.CreateJoint(jointDef)
   }
 
-  Rider.prototype.update = function (visible) {
+  update(visible) {
     if (!Constants.debug_physics) {
       this.update_part(this.torso, 'torso', visible)
       this.update_part(this.upper_leg, 'upper_leg', visible)
@@ -278,7 +299,7 @@ Rider = (function () {
     }
   }
 
-  Rider.prototype.update_part = function (part, name, visible) {
+  update_part(part, name, visible) {
     var angle, part_constants, position, sprite, texture
     sprite = this[name + '_sprite']
     sprite.visible = visible
@@ -299,8 +320,6 @@ Rider = (function () {
       return (sprite.scale.x = this.mirror * Math.abs(sprite.scale.x))
     }
   }
-
-  return Rider
-})()
+}
 
 export default Rider

@@ -2,7 +2,7 @@ import $ from 'jquery'
 
 import Constants from '../constants.js'
 
-var Entities, b2FixtureDef, b2CircleShape, b2Body, b2BodyDef, b2AABB
+var b2FixtureDef, b2CircleShape, b2Body, b2BodyDef, b2AABB
 // @ts-ignore
 b2FixtureDef = Box2D.Dynamics.b2FixtureDef
 // @ts-ignore
@@ -14,8 +14,17 @@ b2BodyDef = Box2D.Dynamics.b2BodyDef
 // @ts-ignore
 b2AABB = Box2D.Collision.b2AABB
 
-Entities = (function () {
-  function Entities(level) {
+class Entities {
+  level: any
+  assets: any
+  world: any
+  list: any[]
+  strawberries: any[]
+  wreckers: any[]
+  end_of_level: any
+  player_start: { x: any; y: any }
+
+  constructor(level) {
     this.level = level
     this.assets = level.assets
     this.world = level.physics.world
@@ -24,7 +33,7 @@ Entities = (function () {
     this.wreckers = []
   }
 
-  Entities.prototype.parse = function (xml) {
+  parse(xml) {
     var entity,
       j,
       k,
@@ -118,7 +127,7 @@ Entities = (function () {
     return this
   }
 
-  Entities.prototype.load_assets = function () {
+  load_assets() {
     var entity, i, j, len, ref, results
     ref = this.list
     results = []
@@ -152,12 +161,12 @@ Entities = (function () {
     return results
   }
 
-  Entities.prototype.init = function () {
+  init() {
     this.init_physics_parts()
     return this.init_sprites()
   }
 
-  Entities.prototype.init_physics_parts = function () {
+  init_physics_parts() {
     var entity, j, len, ref, results
     ref = this.list
     results = []
@@ -186,7 +195,7 @@ Entities = (function () {
     return results
   }
 
-  Entities.prototype.init_sprites = function () {
+  init_sprites() {
     var entity, j, len, ref, results
     ref = this.list
     results = []
@@ -211,7 +220,7 @@ Entities = (function () {
     return results
   }
 
-  Entities.prototype.init_entity = function (entity, container) {
+  init_entity(entity, container) {
     var i, j, ref, textures
     if (entity.frames > 0) {
       textures = []
@@ -246,7 +255,7 @@ Entities = (function () {
     }
   }
 
-  Entities.prototype.create_entity = function (entity, name) {
+  create_entity(entity, name) {
     var body, bodyDef, fixDef
     fixDef = new b2FixtureDef()
     fixDef.shape = new b2CircleShape(entity.size.r)
@@ -264,13 +273,13 @@ Entities = (function () {
     return body
   }
 
-  Entities.prototype.update = function (entity) {
+  update() {
     var j, len, ref, results
     if (!Constants.debug_physics) {
       ref = this.list
       results = []
       for (j = 0, len = ref.length; j < len; j++) {
-        entity = ref[j]
+        let entity = ref[j]
         if (entity.sprite) {
           results.push((entity.sprite.visible = this.visible(entity)))
         } else {
@@ -281,7 +290,7 @@ Entities = (function () {
     }
   }
 
-  Entities.prototype.entity_texture_name = function (entity) {
+  entity_texture_name(entity) {
     if (entity.type_id === 'Sprite') {
       return entity.params.name
     } else if (entity.type_id === 'EndOfLevel') {
@@ -294,7 +303,7 @@ Entities = (function () {
     }
   }
 
-  Entities.prototype.compute_aabb = function (entity) {
+  compute_aabb(entity) {
     var aabb, lower_bound, upper_bound
     lower_bound = {
       x: entity.position.x - entity.size.width + entity.center.x,
@@ -310,11 +319,11 @@ Entities = (function () {
     return aabb
   }
 
-  Entities.prototype.visible = function (entity) {
+  visible(entity) {
     return entity.aabb.TestOverlap(this.level.camera.aabb) && entity.display
   }
 
-  Entities.prototype.frame_name = function (entity, frame_number) {
+  frame_name(entity, frame_number) {
     return (
       '' +
       entity.file_base +
@@ -323,8 +332,6 @@ Entities = (function () {
       entity.file_ext
     )
   }
-
-  return Entities
-})()
+}
 
 export default Entities

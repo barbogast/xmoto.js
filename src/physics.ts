@@ -1,8 +1,7 @@
 import Constants from './constants.js'
 import Ghost from './moto/ghost.js'
 
-var Physics,
-  b2AABB,
+var b2AABB,
   b2Body,
   b2BodyDef,
   b2CircleShape,
@@ -48,8 +47,17 @@ b2MouseJointDef = Box2D.Dynamics.Joints.b2MouseJointDef
 // @ts-ignore
 b2Settings = Box2D.Common.b2Settings
 
-Physics = (function () {
-  function Physics(level) {
+class Physics {
+  level: any
+  options: any
+  camera: any
+  world: any
+  debug_ctx: any
+  last_step: number
+  step: number
+  steps: number
+
+  constructor(level) {
     var debugDraw
     this.level = level
     this.options = level.options
@@ -67,19 +75,19 @@ Physics = (function () {
     this.world
   }
 
-  Physics.prototype.init = function () {
+  init() {
     this.last_step = new Date().getTime()
     this.step = 1000.0 / Constants.fps
     return (this.steps = 0)
   }
 
-  Physics.prototype.restart = function () {
+  restart() {
     var player_ghost, replay, time
     replay = this.level.replay
     player_ghost = this.level.ghosts.player
     if (replay.success) {
       time = (replay.steps / 60.0).toFixed(2).replace('.', ':')
-      if (!player_ghost.replay || player_ghost.replay.steps > replay.steps) {
+      if (!player_ghost || player_ghost.replay.steps > replay.steps) {
         this.save_replay_and_init_ghosts(replay)
         console.log(
           'WIN : you improved your personal score : ' +
@@ -102,14 +110,14 @@ Physics = (function () {
     return this.init()
   }
 
-  Physics.prototype.save_replay_and_init_ghosts = function (replay) {
+  save_replay_and_init_ghosts(replay) {
     replay.add_step()
     replay.save()
     this.level.ghosts.player = new Ghost(this.level, replay.clone())
     return this.level.ghosts.init()
   }
 
-  Physics.prototype.update = function () {
+  update() {
     var results
     results = []
     while (new Date().getTime() - this.last_step > this.step) {
@@ -132,14 +140,7 @@ Physics = (function () {
     return results
   }
 
-  Physics.prototype.create_polygon = function (
-    vertices,
-    name,
-    density,
-    restitution,
-    friction,
-    group_index
-  ) {
+  create_polygon(vertices, name, density, restitution, friction, group_index) {
     var bodyDef, fixDef
     if (density == null) {
       density = 1.0
@@ -170,14 +171,7 @@ Physics = (function () {
     return this.world.CreateBody(bodyDef).CreateFixture(fixDef)
   }
 
-  Physics.prototype.create_lines = function (
-    block,
-    name,
-    density,
-    restitution,
-    friction,
-    group_index
-  ) {
+  create_lines(block, name, density, restitution, friction, group_index) {
     var body, bodyDef, fixDef, i, j, len, ref, results, vertex, vertex1, vertex2
     if (density == null) {
       density = 1.0
@@ -223,7 +217,7 @@ Physics = (function () {
     return results
   }
 
-  Physics.create_shape = function (fix_def, shape, mirror?: boolean) {
+  static create_shape(fix_def, shape, mirror?: boolean) {
     var b2vertices, j, k, len, len1, vertex
     if (mirror == null) {
       mirror = false
@@ -242,8 +236,6 @@ Physics = (function () {
     }
     return fix_def.shape.SetAsArray(b2vertices)
   }
-
-  return Physics
-})()
+}
 
 export default Physics

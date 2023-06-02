@@ -17,14 +17,36 @@ import Entities from './level_elements/entities.js'
 import Replay from './moto/replay.js'
 import Ghosts from './moto/ghosts.js'
 
-var Level, b2AABB, b2Vec2
+var b2AABB, b2Vec2
 // @ts-ignore
 b2AABB = Box2D.Collision.b2AABB
 // @ts-ignore
 b2Vec2 = Box2D.Common.Math.b2Vec2
 
-Level = (function () {
-  function Level(renderer, options) {
+class Level {
+  renderer: any
+  options: any
+  debug_ctx: CanvasRenderingContext2D
+  assets: Assets
+  camera: Camera
+  physics: any
+  input: Input
+  listeners: any
+  moto: Moto
+  particles: Particles
+  infos: Infos
+  sky: Sky
+  blocks: Blocks
+  limits: Limits
+  layer_offsets: LayerOffsets
+  script: Script
+  entities: Entities
+  replay: Replay
+  ghosts: Ghosts
+  start_time: number
+  current_time: number
+
+  constructor(renderer, options) {
     this.renderer = renderer
     this.options = options
     this.debug_ctx = ($('#xmoto-debug').get(0) as HTMLCanvasElement).getContext(
@@ -50,7 +72,7 @@ Level = (function () {
     this.ghosts = new Ghosts(this)
   }
 
-  Level.prototype.load_from_file = function (filename, callback) {
+  load_from_file(filename, callback) {
     return this.assets.parse_theme(
       'modern.xml',
       (function (_this) {
@@ -69,7 +91,7 @@ Level = (function () {
     )
   }
 
-  Level.prototype.load_level = function (xml, callback) {
+  load_level(xml, callback) {
     this.infos.parse(xml)
     this.sky.parse(xml)
     this.blocks.parse(xml)
@@ -86,7 +108,7 @@ Level = (function () {
     return this.assets.load(callback)
   }
 
-  Level.prototype.init = function () {
+  init() {
     this.sky.init()
     this.blocks.init()
     this.limits.init()
@@ -100,7 +122,7 @@ Level = (function () {
     return this.init_timer()
   }
 
-  Level.prototype.update = function () {
+  update() {
     var dead_player, dead_replay
     this.physics.update()
     dead_player = this.options.playable && !this.moto.dead
@@ -120,12 +142,12 @@ Level = (function () {
     return this.particles.update()
   }
 
-  Level.prototype.init_timer = function () {
+  init_timer() {
     this.start_time = new Date().getTime()
     return (this.current_time = 0)
   }
 
-  Level.prototype.update_timer = function (update_now) {
+  update_timer(update_now?) {
     var cents, minutes, new_time, seconds
     if (update_now == null) {
       update_now = false
@@ -149,7 +171,7 @@ Level = (function () {
     return (this.current_time = new_time)
   }
 
-  Level.prototype.got_strawberries = function () {
+  got_strawberries() {
     var i, len, ref, strawberry
     ref = this.entities.strawberries
     for (i = 0, len = ref.length; i < len; i++) {
@@ -161,7 +183,7 @@ Level = (function () {
     return true
   }
 
-  Level.prototype.respawn_strawberries = function () {
+  respawn_strawberries() {
     var entity, i, len, ref, results
     ref = this.entities.strawberries
     results = []
@@ -172,7 +194,7 @@ Level = (function () {
     return results
   }
 
-  Level.prototype.restart = function () {
+  restart() {
     this.replay = new Replay(this)
     this.ghosts.reload()
     this.moto.destroy()
@@ -182,8 +204,6 @@ Level = (function () {
     this.init_timer()
     return this.update_timer(true)
   }
-
-  return Level
-})()
+}
 
 export default Level

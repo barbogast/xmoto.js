@@ -2,17 +2,29 @@ import $ from 'jquery'
 
 import Constants from '../constants.js'
 
-var Sky
+class Sky {
+  level: any
+  assets: any
+  theme: any
+  options: any
+  name: any
+  color_r: number
+  color_g: number
+  color_b: number
+  color_a: number
+  zoom: number
+  offset: number
+  filename: any
+  sprite: any
 
-Sky = (function () {
-  function Sky(level) {
+  constructor(level) {
     this.level = level
     this.assets = level.assets
     this.theme = this.assets.theme
     this.options = level.options
   }
 
-  Sky.prototype.parse = function (xml) {
+  parse(xml) {
     var xml_sky
     xml_sky = $(xml).find('level info sky')
     this.name = xml_sky.text().toLowerCase()
@@ -25,19 +37,20 @@ Sky = (function () {
     if (this.name === '') {
       this.name = 'sky1'
     }
+
     this.filename = this.theme.texture_params(this.name).file
     return this
   }
 
-  Sky.prototype.load_assets = function () {
+  load_assets() {
     return this.assets.textures.push(this.filename)
   }
 
-  Sky.prototype.init = function () {
+  init() {
     return this.init_sprites()
   }
 
-  Sky.prototype.init_sprites = function () {
+  init_sprites() {
     var texture
     // @ts-ignore
     texture = PIXI.Texture.from(this.assets.get_url(this.filename))
@@ -52,7 +65,7 @@ Sky = (function () {
     return this.level.stage.addChildAt(this.sprite, 0)
   }
 
-  Sky.prototype.update = function () {
+  update() {
     var ctx, position_factor_x, position_factor_y
     ctx = this.level.debug_ctx
     if (Constants.debug_physics) {
@@ -75,8 +88,6 @@ Sky = (function () {
         this.level.camera.target().y * position_factor_y)
     }
   }
-
-  return Sky
-})()
+}
 
 export default Sky

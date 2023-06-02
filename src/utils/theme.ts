@@ -1,9 +1,13 @@
 import $ from 'jquery'
 
-var Theme
+class Theme {
+  filename: any
+  callback: any
+  sprites: any[]
+  edges: any[]
+  textures: any[]
 
-Theme = (function () {
-  function Theme(filename, callback) {
+  constructor(filename, callback) {
     this.filename = filename
     this.callback = callback
     this.sprites = []
@@ -18,7 +22,7 @@ Theme = (function () {
     })
   }
 
-  Theme.prototype.load_theme = function (xml) {
+  load_theme(xml) {
     var i, len, xml_sprite, xml_sprites
     xml_sprites = $(xml).find('sprite')
     for (i = 0, len = xml_sprites.length; i < len; i++) {
@@ -60,19 +64,17 @@ Theme = (function () {
     return this.callback()
   }
 
-  Theme.prototype.sprite_params = function (name) {
+  sprite_params(name) {
     return this.sprites[name]
   }
 
-  Theme.prototype.edge_params = function (name) {
+  edge_params(name) {
     return this.edges[name]
   }
 
-  Theme.prototype.texture_params = function (name) {
+  texture_params(name) {
     return this.textures[name]
   }
-
-  return Theme
-})()
+}
 
 export default Theme

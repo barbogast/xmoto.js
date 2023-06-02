@@ -2,20 +2,35 @@ import $ from 'jquery'
 
 import Constants from '../constants.js'
 
-var Limits, b2AABB, b2Vec2
-// @ts-ignore
-b2Vec2 = Box2D.Common.Math.b2Vec2
+var b2AABB
 // @ts-ignore
 b2AABB = Box2D.Collision.b2AABB
 
-Limits = (function () {
-  function Limits(level) {
+class Limits {
+  level: any
+  assets: any
+  theme: any
+  player: { left: number; right: number; top: number; bottom: number }
+  screen: { left: number; right: number; top: number; bottom: number }
+  size: { x: number; y: number }
+  left_wall_aabb: any
+  right_wall_aabb: any
+  bottom_wall_aabb: any
+  top_wall_aabb: any
+  texture: string
+  texture_name: any
+  left_sprite: any
+  right_sprite: any
+  bottom_sprite: any
+  top_sprite: any
+
+  constructor(level) {
     this.level = level
     this.assets = level.assets
     this.theme = this.assets.theme
   }
 
-  Limits.prototype.parse = function (xml) {
+  parse(xml) {
     var xml_limits
     xml_limits = $(xml).find('limits')
     this.player = {
@@ -51,16 +66,16 @@ Limits = (function () {
     return this
   }
 
-  Limits.prototype.load_assets = function () {
+  load_assets() {
     return this.assets.textures.push(this.texture_name)
   }
 
-  Limits.prototype.init = function () {
+  init() {
     this.init_physics_parts()
     return this.init_sprites()
   }
 
-  Limits.prototype.init_physics_parts = function () {
+  init_physics_parts() {
     var ground, vertices
     ground = Constants.ground
     vertices = []
@@ -161,7 +176,7 @@ Limits = (function () {
     )
   }
 
-  Limits.prototype.init_sprites = function () {
+  init_sprites() {
     var bottom_size_x,
       bottom_size_y,
       left_size_x,
@@ -227,7 +242,7 @@ Limits = (function () {
     return this.level.camera.neutral_z_container.addChild(this.top_sprite)
   }
 
-  Limits.prototype.update = function () {
+  update() {
     if (!Constants.debug_physics) {
       this.left_sprite.visible = this.visible(this.left_wall_aabb)
       this.right_sprite.visible = this.visible(this.right_wall_aabb)
@@ -236,11 +251,9 @@ Limits = (function () {
     }
   }
 
-  Limits.prototype.visible = function (wall_aabb) {
+  visible(wall_aabb) {
     return wall_aabb.TestOverlap(this.level.camera.aabb)
   }
-
-  return Limits
-})()
+}
 
 export default Limits

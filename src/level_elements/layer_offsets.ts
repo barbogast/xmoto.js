@@ -1,15 +1,17 @@
 import $ from 'jquery'
 
-var LayerOffsets
+class LayerOffsets {
+  level: any
+  assets: any
+  list: any[]
 
-LayerOffsets = (function () {
-  function LayerOffsets(level) {
+  constructor(level) {
     this.level = level
     this.assets = level.assets
     this.list = []
   }
 
-  LayerOffsets.prototype.parse = function (xml) {
+  parse(xml) {
     var i, layer_offset, len, xml_layer_offset, xml_layer_offsets
     xml_layer_offsets = $(xml).find('layeroffsets layeroffset')
     for (i = 0, len = xml_layer_offsets.length; i < len; i++) {
@@ -24,11 +26,9 @@ LayerOffsets = (function () {
     return this
   }
 
-  LayerOffsets.prototype.init = function () {}
+  init() {}
 
-  LayerOffsets.prototype.display = function (ctx) {}
-
-  return LayerOffsets
-})()
+  display(ctx) {}
+}
 
 export default LayerOffsets

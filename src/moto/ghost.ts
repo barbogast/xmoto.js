@@ -1,9 +1,12 @@
 import Moto from './moto.js'
 
-var Ghost
+class Ghost {
+  level: any
+  replay: any
+  transparent: any
+  moto: any
 
-Ghost = (function () {
-  function Ghost(level, replay, transparent) {
+  constructor(level, replay, transparent?) {
     if (transparent == null) {
       transparent = true
     }
@@ -13,22 +16,22 @@ Ghost = (function () {
     this.moto = new Moto(this.level, this.transparent)
   }
 
-  Ghost.prototype.init = function () {
+  init() {
     return this.moto.init()
   }
 
-  Ghost.prototype.reload = function () {
+  reload() {
     this.moto.destroy()
     this.moto = new Moto(this.level, this.transparent)
     return this.moto.init()
   }
 
-  Ghost.prototype.move = function () {
+  move() {
     this.move_with_input()
     return this.move_with_key_step()
   }
 
-  Ghost.prototype.move_with_input = function () {
+  move_with_input() {
     var current_input
     current_input = {
       up: this.replay.is_down('up'),
@@ -40,7 +43,7 @@ Ghost = (function () {
     return this.moto.move(current_input)
   }
 
-  Ghost.prototype.move_with_key_step = function () {
+  move_with_key_step() {
     var i, j, key_step, len, len1, part, ref, ref1, results
     key_step = this.replay.key_steps[this.level.physics.steps]
     if (key_step) {
@@ -59,11 +62,11 @@ Ghost = (function () {
     }
   }
 
-  Ghost.prototype.update = function () {
+  update() {
     return this.moto.update()
   }
 
-  Ghost.prototype.set_part_position = function (entity, part, key_step) {
+  set_part_position(entity, part, key_step) {
     entity[part].SetPosition({
       x: key_step[part].position.x,
       y: key_step[part].position.y,
@@ -75,8 +78,6 @@ Ghost = (function () {
     })
     return entity[part].GetAngularVelocity(key_step[part].angular_velocity)
   }
-
-  return Ghost
-})()
+}
 
 export default Ghost

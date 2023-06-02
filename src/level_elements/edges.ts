@@ -1,14 +1,18 @@
-import Math2D from '../utils/math2d.js'
+import * as Math2D from '../utils/math2d.js'
 import Constants from '../constants.js'
 
-var Edges, b2AABB, b2Vec2
-// @ts-ignore
-b2Vec2 = Box2D.Common.Math.b2Vec2
+var b2AABB
 // @ts-ignore
 b2AABB = Box2D.Collision.b2AABB
 
-Edges = (function () {
-  function Edges(level, block) {
+class Edges {
+  level: any
+  block: any
+  assets: any
+  theme: any
+  list: any[]
+
+  constructor(level, block?) {
     this.level = level
     this.block = block
     this.assets = this.level.assets
@@ -16,7 +20,7 @@ Edges = (function () {
     this.list = []
   }
 
-  Edges.prototype.parse = function () {
+  parse() {
     var edge, i, j, len, ref, results, vertex
     ref = this.block.vertices
     results = []
@@ -62,7 +66,7 @@ Edges = (function () {
     return results
   }
 
-  Edges.prototype.load_assets = function () {
+  load_assets() {
     var edge, j, len, ref, results
     ref = this.list
     results = []
@@ -73,11 +77,11 @@ Edges = (function () {
     return results
   }
 
-  Edges.prototype.init = function () {
+  init() {
     return this.init_sprites()
   }
 
-  Edges.prototype.init_sprites = function () {
+  init_sprites() {
     var edge,
       j,
       k,
@@ -135,7 +139,7 @@ Edges = (function () {
     return results
   }
 
-  Edges.prototype.update = function () {
+  update() {
     var block_visible, edge, j, len, ref, results
     if (!Constants.debug_physics) {
       block_visible = this.block.sprite.visible
@@ -151,7 +155,7 @@ Edges = (function () {
     }
   }
 
-  Edges.prototype.compute_aabb = function (edge) {
+  compute_aabb(edge) {
     var aabb, first, j, len, lower_bound, ref, upper_bound, vertex
     first = true
     lower_bound = {}
@@ -190,11 +194,9 @@ Edges = (function () {
     return aabb
   }
 
-  Edges.prototype.visible = function (edge) {
+  visible(edge) {
     return edge.aabb.TestOverlap(this.level.camera.aabb)
   }
-
-  return Edges
-})()
+}
 
 export default Edges

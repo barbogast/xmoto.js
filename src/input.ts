@@ -1,9 +1,15 @@
 import $ from 'jquery'
 
-var Input
+class Input {
+  level: any
+  assets: any
+  up: boolean
+  down: boolean
+  left: boolean
+  right: boolean
+  space: boolean
 
-Input = (function () {
-  function Input(level) {
+  constructor(level) {
     this.level = level
     this.assets = level.assets
     this.up = false
@@ -13,12 +19,12 @@ Input = (function () {
     this.space = false
   }
 
-  Input.prototype.init = function () {
+  init() {
     this.disable_scroll()
     return this.init_keyboard()
   }
 
-  Input.prototype.disable_scroll = function () {
+  disable_scroll() {
     var keydown, keys, preventDefault
     keys = [37, 38, 39, 40, 32]
     preventDefault = function (e) {
@@ -42,7 +48,7 @@ Input = (function () {
     return (document.onkeydown = keydown)
   }
 
-  Input.prototype.init_keyboard = function () {
+  init_keyboard() {
     $(document).off('keydown')
     $(document).on(
       'keydown',
@@ -105,8 +111,6 @@ Input = (function () {
       })(this)
     )
   }
-
-  return Input
-})()
+}
 
 export default Input

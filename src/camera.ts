@@ -1,16 +1,28 @@
 import $ from 'jquery'
 
 import Constants from './constants.js'
-import Math2D from './utils/math2d.js'
+import * as Math2D from './utils/math2d.js'
 
-var Camera, b2Vec2, b2AABB
+var b2Vec2, b2AABB
 // @ts-ignore
 b2Vec2 = Box2D.Common.Math.b2Vec2
 // @ts-ignore
 b2AABB = Box2D.Collision.b2AABB
 
-Camera = (function () {
-  function Camera(level) {
+class Camera {
+  level: any
+  options: any
+  scale: { x: any; y: any }
+  translate: { x: number; y: number }
+  scale_container: any
+  translate_container: any
+  negative_z_container: any
+  neutral_z_container: any
+  positive_z_container: any
+  clipping: any
+  aabb: any
+
+  constructor(level) {
     this.level = level
     this.options = level.options
     this.scale = {
@@ -38,7 +50,7 @@ Camera = (function () {
     this.translate_container.addChild(this.positive_z_container)
   }
 
-  Camera.prototype.init = function () {
+  init() {
     if (Constants.manual_scale) {
       this.init_scroll()
     }
@@ -55,7 +67,7 @@ Camera = (function () {
     return this.compute_aabb()
   }
 
-  Camera.prototype.active_object = function () {
+  active_object() {
     if (this.level.options.playable) {
       return this.level.moto.body
     } else {
@@ -63,7 +75,7 @@ Camera = (function () {
     }
   }
 
-  Camera.prototype.move = function () {
+  move() {
     var speed, velocity
     if (Constants.automatic_scale) {
       velocity = this.active_object().GetLinearVelocity()
@@ -80,7 +92,7 @@ Camera = (function () {
     }
   }
 
-  Camera.prototype.update = function () {
+  update() {
     var ctx, size_x, size_y
     if (Constants.debug_physics) {
       ctx = this.level.physics.debug_ctx
@@ -109,7 +121,7 @@ Camera = (function () {
     }
   }
 
-  Camera.prototype.target = function () {
+  target() {
     var adjusted_position, options, position
     options = this.level.options
     position = this.active_object().GetPosition()
@@ -119,7 +131,7 @@ Camera = (function () {
     })
   }
 
-  Camera.prototype.init_scroll = function () {
+  init_scroll() {
     var canvas, scroll
     scroll = (function (_this) {
       return function (event) {
@@ -157,7 +169,7 @@ Camera = (function () {
     return canvas.addEventListener('mousewheel', scroll, false)
   }
 
-  Camera.prototype.compute_aabb = function () {
+  compute_aabb() {
     if (Constants.debug_clipping) {
       return (this.aabb = this.aabb_for_clipping())
     } else {
@@ -165,7 +177,7 @@ Camera = (function () {
     }
   }
 
-  Camera.prototype.aabb_for_clipping = function () {
+  aabb_for_clipping() {
     var aabb, size_x, size_y
     size_x = (this.options.width * 0.6) / this.scale.x
     size_y = (-this.options.height * 0.6) / this.scale.y
@@ -181,7 +193,7 @@ Camera = (function () {
     return aabb
   }
 
-  Camera.prototype.aabb_for_canvas = function () {
+  aabb_for_canvas() {
     var aabb, size_x, size_y
     size_x = (this.options.width * 1.0) / this.scale.x
     size_y = (-this.options.height * 1.0) / this.scale.y
@@ -196,8 +208,6 @@ Camera = (function () {
     )
     return aabb
   }
-
-  return Camera
-})()
+}
 
 export default Camera

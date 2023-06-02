@@ -2,19 +2,22 @@ import Constants from '../constants.js'
 import Ghost from './ghost.js'
 import Replay from './replay.js'
 
-var Ghosts
+class Ghosts {
+  level: any
+  assets: any
+  options: any
+  player: Ghost
+  others: any[]
 
-Ghosts = (function () {
-  function Ghosts(level) {
+  constructor(level) {
     this.level = level
     this.assets = level.assets
     this.options = level.options
-    this.player = {}
     this.others = []
     this.load_replays()
   }
 
-  Ghosts.prototype.load_assets = function () {
+  load_assets() {
     var i, len, part, parts, results
     parts = [
       Constants.torso,
@@ -36,15 +39,17 @@ Ghosts = (function () {
     return results
   }
 
-  Ghosts.prototype.all_ghosts = function () {
+  all_ghosts() {
     var ghosts
     ghosts = []
     ghosts = ghosts.concat(this.others)
-    ghosts.push(this.player)
+    if (this.player) {
+      ghosts.push(this.player)
+    }
     return ghosts
   }
 
-  Ghosts.prototype.init = function () {
+  init() {
     var ghost, i, len, ref, results
     ref = this.all_ghosts()
     results = []
@@ -59,7 +64,7 @@ Ghosts = (function () {
     return results
   }
 
-  Ghosts.prototype.reload = function () {
+  reload() {
     var ghost, i, len, ref, results
     ref = this.all_ghosts()
     results = []
@@ -74,7 +79,7 @@ Ghosts = (function () {
     return results
   }
 
-  Ghosts.prototype.move = function () {
+  move() {
     var ghost, i, len, ref, results
     ref = this.all_ghosts()
     results = []
@@ -89,7 +94,7 @@ Ghosts = (function () {
     return results
   }
 
-  Ghosts.prototype.update = function () {
+  update() {
     var ghost, i, len, ref, results
     ref = this.all_ghosts()
     results = []
@@ -104,7 +109,7 @@ Ghosts = (function () {
     return results
   }
 
-  Ghosts.prototype.load_replays = function () {
+  load_replays() {
     var i, len, option_replay, ref, replay, results
     ref = this.options.replays
     results = []
@@ -118,10 +123,9 @@ Ghosts = (function () {
         results.push(this.others.push(new Ghost(this.level, replay)))
       }
     }
+
     return results
   }
-
-  return Ghosts
-})()
+}
 
 export default Ghosts

@@ -1,12 +1,26 @@
 import $ from 'jquery'
 
 import Constants from '../constants.js'
-import ReplayConversionService from '../services/replay_conversion_service.js'
+import * as ReplayConversionService from '../services/replay_conversion_service.js'
 
-var Replay
+class Replay {
+  level: any
+  success: boolean
+  steps: number
+  inputs: {
+    up_down: any[]
+    up_up: any[]
+    down_down: any[]
+    down_up: any[]
+    left_down: any[]
+    left_up: any[]
+    right_down: any[]
+    right_up: any[]
+    space_pressed: any[]
+  }
+  key_steps: {}
 
-Replay = (function () {
-  function Replay(level) {
+  constructor(level) {
     this.level = level
     this.success = false
     this.steps = 0
@@ -24,7 +38,7 @@ Replay = (function () {
     this.key_steps = {}
   }
 
-  Replay.prototype.clone = function () {
+  clone() {
     var j, k, key, len, len1, new_replay, part, ref, ref1, ref2, value
     new_replay = new Replay(this.level)
     new_replay.success = this.success
@@ -79,13 +93,13 @@ Replay = (function () {
     return new_replay
   }
 
-  Replay.prototype.add_step = function () {
+  add_step() {
     this.steps = this.level.physics.steps
     this.add_inputs()
     return this.add_key_steps()
   }
 
-  Replay.prototype.add_inputs = function () {
+  add_inputs() {
     var input, j, key, len, ref
     input = this.level.input
     ref = ['up', 'down', 'left', 'right']
@@ -102,7 +116,7 @@ Replay = (function () {
     }
   }
 
-  Replay.prototype.add_key_steps = function () {
+  add_key_steps() {
     var j, k, key_step, len, len1, moto, part, ref, ref1, results, rider
     moto = this.level.moto
     rider = moto.rider
@@ -123,7 +137,7 @@ Replay = (function () {
     }
   }
 
-  Replay.prototype.last = function (input) {
+  last(input) {
     var element, i, input_length, j, last_element, len, ref, steps
     last_element = null
     input_length = this.inputs[input].length
@@ -142,19 +156,19 @@ Replay = (function () {
     return last_element
   }
 
-  Replay.prototype.is_up = function (key) {
+  is_up(key) {
     return this.last(key + '_up') >= this.last(key + '_down')
   }
 
-  Replay.prototype.is_down = function (key) {
+  is_down(key) {
     return this.last(key + '_down') >= this.last(key + '_up')
   }
 
-  Replay.prototype.is_pressed = function (key) {
+  is_pressed(key) {
     return this.last(key + '_pressed') === this.level.physics.steps
   }
 
-  Replay.prototype.load = function (data) {
+  load(data) {
     var splitted
     splitted = data.split('\n')
     this.inputs = ReplayConversionService.string_to_inputs(splitted[0])
@@ -163,7 +177,7 @@ Replay = (function () {
     return this
   }
 
-  Replay.prototype.save = function () {
+  save() {
     var inputs_string, key_steps_string, replay_string
     inputs_string = ReplayConversionService.inputs_to_string(this.inputs)
     key_steps_string = ReplayConversionService.key_steps_to_string(
@@ -178,7 +192,7 @@ Replay = (function () {
     })
   }
 
-  Replay.prototype.physics_values = function (object) {
+  physics_values(object) {
     return {
       position: {
         x: object.GetPosition().x,
@@ -192,8 +206,6 @@ Replay = (function () {
       angular_velocity: object.GetAngularVelocity(),
     }
   }
-
-  return Replay
-})()
+}
 
 export default Replay

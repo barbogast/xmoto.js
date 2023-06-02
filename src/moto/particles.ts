@@ -1,16 +1,19 @@
 import Constants from '../constants.js'
 
-var Particles
+class Particles {
+  level: any
+  physics: any
+  world: any
+  list: any[]
 
-Particles = (function () {
-  function Particles(level, replay) {
+  constructor(level, replay?) {
     this.level = level
     this.physics = level.physics
     this.world = this.physics.world
     this.list = []
   }
 
-  Particles.prototype.create = function () {
+  create() {
     var bodyDef, fixDef, particle
     // @ts-ignore
     fixDef = new b2FixtureDef()
@@ -43,7 +46,7 @@ Particles = (function () {
     return this.list.push(particle)
   }
 
-  Particles.prototype.update = function () {
+  update() {
     var ctx, i, len, particle, position, ref, results
     ctx = this.level.ctx
     ref = this.list
@@ -60,8 +63,6 @@ Particles = (function () {
     }
     return results
   }
-
-  return Particles
-})()
+}
 
 export default Particles

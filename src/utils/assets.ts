@@ -2,11 +2,17 @@ import $ from 'jquery'
 
 import Theme from './theme.js'
 
-var Assets
+class Assets {
+  theme: Theme
+  textures: any[]
+  anims: any[]
+  effects: any[]
+  moto: any[]
+  sounds: any[]
+  resources: {}
 
-Assets = (function () {
-  function Assets() {
-    this.theme = {}
+  constructor() {
+    this.theme = new Theme('', () => {})
     this.textures = []
     this.anims = []
     this.effects = []
@@ -15,14 +21,11 @@ Assets = (function () {
     this.resources = {}
   }
 
-  Assets.prototype.parse_theme = function (filename, callback) {
-    return (this.theme = $.extend(
-      this.theme,
-      new Theme('modern.xml', callback)
-    ))
+  parse_theme(filename, callback) {
+    Object.assign(this.theme, new Theme('modern.xml', callback))
   }
 
-  Assets.prototype.load = function (callback) {
+  load(callback) {
     var i,
       item,
       items,
@@ -92,15 +95,15 @@ Assets = (function () {
     )
   }
 
-  Assets.prototype.get = function (name) {
+  get(name) {
     return this.resources[name].data
   }
 
-  Assets.prototype.get_url = function (name) {
+  get_url(name) {
     return this.resources[name].url
   }
 
-  Assets.prototype.remove_duplicate_textures = function (array) {
+  remove_duplicate_textures(array) {
     var found, i, image, j, len, len1, unique, unique_image
     unique = []
     for (i = 0, len = array.length; i < len; i++) {
@@ -118,8 +121,6 @@ Assets = (function () {
     }
     return unique
   }
-
-  return Assets
-})()
+}
 
 export default Assets

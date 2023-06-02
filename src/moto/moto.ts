@@ -1,11 +1,10 @@
 import Rider from './rider.js'
 import Constants from '../constants.js'
 import Physics from '../physics.js'
-import Math2D from '../utils/math2d.js'
-import MotoFlipService from '../services/moto_flip_service.js'
+import * as Math2D from '../utils/math2d.js'
+import * as MotoFlipService from '../services/moto_flip_service.js'
 
-var Moto,
-  b2Body,
+var b2Body,
   b2BodyDef,
   b2CircleShape,
   b2Fixture,
@@ -36,8 +35,32 @@ b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef
 // @ts-ignore
 b2AABB = Box2D.Collision.b2AABB
 
-Moto = (function () {
-  function Moto(level, ghost) {
+class Moto {
+  level: any
+  assets: any
+  world: any
+  mirror: number
+  dead: boolean
+  ghost: any
+  rider: any
+  player_start: any
+  left_revolute_joint: any
+  right_revolute_joint: any
+  left_prismatic_joint: any
+  right_prismatic_joint: any
+  aabb: any
+  body: any
+  left_wheel: any
+  right_wheel: any
+  left_axle: any
+  right_axle: any
+  body_sprite: any
+  left_wheel_sprite: any
+  right_wheel_sprite: any
+  left_axle_sprite: any
+  right_axle_sprite: any
+
+  constructor(level, ghost?) {
     if (ghost == null) {
       ghost = false
     }
@@ -50,7 +73,7 @@ Moto = (function () {
     this.rider = new Rider(level, this)
   }
 
-  Moto.prototype.destroy = function () {
+  destroy() {
     this.rider.destroy()
     this.world.DestroyBody(this.body)
     this.world.DestroyBody(this.left_wheel)
@@ -66,7 +89,7 @@ Moto = (function () {
     )
   }
 
-  Moto.prototype.load_assets = function () {
+  load_assets() {
     var i, len, part, parts
     parts = [
       Constants.body,
@@ -86,12 +109,12 @@ Moto = (function () {
     return this.rider.load_assets()
   }
 
-  Moto.prototype.init = function () {
+  init() {
     this.init_physics_parts()
     return this.init_sprites()
   }
 
-  Moto.prototype.init_physics_parts = function () {
+  init_physics_parts() {
     this.player_start = this.level.entities.player_start
     this.body = this.create_body()
     this.left_wheel = this.create_wheel(Constants.left_wheel)
@@ -117,7 +140,7 @@ Moto = (function () {
     return this.rider.init_physics_parts()
   }
 
-  Moto.prototype.init_sprites = function () {
+  init_sprites() {
     var asset_name, i, len, part, ref
     ref = ['body', 'left_wheel', 'right_wheel', 'left_axle', 'right_axle']
     for (i = 0, len = ref.length; i < len; i++) {
@@ -136,7 +159,7 @@ Moto = (function () {
     return this.rider.init_sprites()
   }
 
-  Moto.prototype.move = function (input) {
+  move(input) {
     var air_density,
       back_force,
       biker_force,
@@ -229,7 +252,7 @@ Moto = (function () {
     }
   }
 
-  Moto.prototype.wheeling = function (force) {
+  wheeling(force) {
     var force_leg, force_torso, moto_angle
     moto_angle = this.mirror * this.body.GetAngle()
     this.body.ApplyTorque(this.mirror * force * 0.5)
@@ -264,13 +287,13 @@ Moto = (function () {
     )
   }
 
-  Moto.prototype.flip = function () {
+  flip() {
     if (!this.dead) {
       return MotoFlipService.execute(this)
     }
   }
 
-  Moto.prototype.create_body = function () {
+  create_body() {
     var body, bodyDef, fixDef
     fixDef = new b2FixtureDef()
     fixDef.shape = new b2PolygonShape()
@@ -295,7 +318,7 @@ Moto = (function () {
     return body
   }
 
-  Moto.prototype.create_wheel = function (part_constants) {
+  create_wheel(part_constants) {
     var bodyDef, fixDef, wheel
     fixDef = new b2FixtureDef()
     fixDef.shape = new b2CircleShape(part_constants.radius)
@@ -319,7 +342,7 @@ Moto = (function () {
     return wheel
   }
 
-  Moto.prototype.create_axle = function (part_constants) {
+  create_axle(part_constants) {
     var body, bodyDef, fixDef
     fixDef = new b2FixtureDef()
     fixDef.shape = new b2PolygonShape()
@@ -344,14 +367,14 @@ Moto = (function () {
     return body
   }
 
-  Moto.prototype.create_revolute_joint = function (axle, wheel) {
+  create_revolute_joint(axle, wheel) {
     var jointDef
     jointDef = new b2RevoluteJointDef()
     jointDef.Initialize(axle, wheel, wheel.GetWorldCenter())
     return this.world.CreateJoint(jointDef)
   }
 
-  Moto.prototype.create_prismatic_joint = function (axle, part_constants) {
+  create_prismatic_joint(axle, part_constants) {
     var angle, jointDef
     jointDef = new b2PrismaticJointDef()
     angle = part_constants.angle
@@ -369,7 +392,7 @@ Moto = (function () {
     return this.world.CreateJoint(jointDef)
   }
 
-  Moto.prototype.update = function () {
+  update() {
     var visible
     this.aabb = this.compute_aabb()
     if (!Constants.debug_physics) {
@@ -383,7 +406,7 @@ Moto = (function () {
     }
   }
 
-  Moto.prototype.update_wheel = function (part, part_constants, visible) {
+  update_wheel(part, part_constants, visible) {
     var angle, position, wheel_sprite
     if (part_constants.position.x < 0) {
       wheel_sprite = this.left_wheel_sprite
@@ -406,7 +429,7 @@ Moto = (function () {
     }
   }
 
-  Moto.prototype.update_body = function (part, part_constants, visible) {
+  update_body(part, part_constants, visible) {
     var angle, position
     this.body_sprite.visible = visible
     if (visible) {
@@ -424,7 +447,7 @@ Moto = (function () {
     }
   }
 
-  Moto.prototype.update_left_axle = function (part, part_constants, visible) {
+  update_left_axle(part, part_constants, visible) {
     var axle_position, axle_thickness, texture, wheel_position
     axle_thickness = 0.09
     wheel_position = this.left_wheel.GetPosition()
@@ -447,7 +470,7 @@ Moto = (function () {
     )
   }
 
-  Moto.prototype.update_right_axle = function (part, part_constants, visible) {
+  update_right_axle(part, part_constants, visible) {
     var axle_position, axle_thickness, texture, wheel_position
     axle_thickness = 0.07
     wheel_position = this.right_wheel.GetPosition()
@@ -473,7 +496,7 @@ Moto = (function () {
     )
   }
 
-  Moto.prototype.update_axle_common = function (
+  update_axle_common(
     wheel_position,
     axle_position,
     axle_thickness,
@@ -515,7 +538,7 @@ Moto = (function () {
     }
   }
 
-  Moto.prototype.compute_aabb = function () {
+  compute_aabb() {
     var aabb, lower1, lower2, lower3, upper1, upper2, upper3
     lower1 = this.left_wheel.GetFixtureList().GetAABB().lowerBound
     lower2 = this.right_wheel.GetFixtureList().GetAABB().lowerBound
@@ -535,11 +558,9 @@ Moto = (function () {
     return aabb
   }
 
-  Moto.prototype.visible = function () {
+  visible() {
     return this.aabb.TestOverlap(this.level.camera.aabb)
   }
-
-  return Moto
-})()
+}
 
 export default Moto

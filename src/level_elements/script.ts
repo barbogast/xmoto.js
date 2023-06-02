@@ -1,25 +1,25 @@
 import $ from 'jquery'
 
-var Script
+class Script {
+  level: any
+  assets: any
+  code: any
 
-Script = (function () {
-  function Script(level) {
+  constructor(level) {
     this.level = level
     this.assets = level.assets
   }
 
-  Script.prototype.parse = function (xml) {
+  parse(xml) {
     var xml_script
     xml_script = $(xml).find('script')
     this.code = xml_script.text()
     return this
   }
 
-  Script.prototype.init = function () {}
+  init() {}
 
-  Script.prototype.display = function (ctx) {}
-
-  return Script
-})()
+  display(ctx) {}
+}
 
 export default Script

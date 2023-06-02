@@ -1,15 +1,17 @@
 import Constants from './constants.js'
 
-var Listeners
+class Listeners {
+  level: any
+  assets: any
+  world: any
 
-Listeners = (function () {
-  function Listeners(level) {
+  constructor(level) {
     this.level = level
     this.assets = level.assets
     this.world = level.physics.world
   }
 
-  Listeners.prototype.active_moto = function () {
+  active_moto() {
     if (this.level.options.playable) {
       return this.level.moto
     } else {
@@ -17,7 +19,7 @@ Listeners = (function () {
     }
   }
 
-  Listeners.prototype.init = function () {
+  init() {
     var listener
     // @ts-ignore
     listener = new Box2D.Dynamics.b2ContactListener()
@@ -78,7 +80,7 @@ Listeners = (function () {
     return this.world.SetContactListener(listener)
   }
 
-  Listeners.does_contact_moto_rider = function (a, b, obj) {
+  static does_contact_moto_rider(a, b, obj) {
     var collision, player
     collision =
       Listeners.does_contact(a, b, obj, 'rider') ||
@@ -87,14 +89,14 @@ Listeners = (function () {
     return collision && player
   }
 
-  Listeners.does_contact = function (a, b, obj1, obj2) {
+  static does_contact(a, b, obj1, obj2) {
     return (
       (a.name === obj1 && b.name === obj2) ||
       (a.name === obj2 && b.name === obj1)
     )
   }
 
-  Listeners.prototype.trigger_restart = function (moto) {
+  trigger_restart(moto) {
     if (moto.ghost) {
       return (moto.dead = true)
     } else {
@@ -103,7 +105,7 @@ Listeners = (function () {
     }
   }
 
-  Listeners.prototype.kill_moto = function (moto) {
+  kill_moto(moto) {
     if (!moto.dead) {
       moto.dead = true
       this.world.DestroyJoint(moto.rider.ankle_joint)
@@ -117,8 +119,6 @@ Listeners = (function () {
         moto.rider.hip_joint.m_lowerAngle * 3)
     }
   }
-
-  return Listeners
-})()
+}
 
 export default Listeners

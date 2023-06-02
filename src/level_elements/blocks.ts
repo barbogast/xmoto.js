@@ -3,15 +3,21 @@ import $ from 'jquery'
 import Edges from './edges.js'
 import Constants from '../constants.js'
 
-var Blocks, b2AABB, b2Vec2
+var b2AABB
 
-// @ts-ignore
-b2Vec2 = Box2D.Common.Math.b2Vec2
 // @ts-ignore
 b2AABB = Box2D.Collision.b2AABB
 
-Blocks = (function () {
-  function Blocks(level) {
+class Blocks {
+  level: any
+  assets: any
+  theme: any
+  list: any[]
+  back_list: any[]
+  front_list: any[]
+  edges: any
+
+  constructor(level) {
     this.level = level
     this.assets = level.assets
     this.theme = this.assets.theme
@@ -21,7 +27,7 @@ Blocks = (function () {
     this.edges = new Edges(this.level)
   }
 
-  Blocks.prototype.parse = function (xml) {
+  parse(xml) {
     var block,
       i,
       j,
@@ -111,7 +117,7 @@ Blocks = (function () {
     return this
   }
 
-  Blocks.prototype.load_assets = function () {
+  load_assets() {
     var block, i, len, ref, results
     ref = this.list
     results = []
@@ -123,7 +129,7 @@ Blocks = (function () {
     return results
   }
 
-  Blocks.prototype.init = function () {
+  init() {
     var block, i, len, ref, results
     this.init_physics_parts()
     this.init_sprites()
@@ -136,7 +142,7 @@ Blocks = (function () {
     return results
   }
 
-  Blocks.prototype.init_physics_parts = function () {
+  init_physics_parts() {
     var block, ground, i, len, ref, results
     ground = Constants.ground
     ref = this.front_list
@@ -156,7 +162,7 @@ Blocks = (function () {
     return results
   }
 
-  Blocks.prototype.init_sprites = function () {
+  init_sprites() {
     var block,
       i,
       j,
@@ -205,7 +211,7 @@ Blocks = (function () {
     return results
   }
 
-  Blocks.prototype.update = function () {
+  update() {
     var block, i, len, ref, results
     if (!Constants.debug_physics) {
       ref = this.list
@@ -219,11 +225,11 @@ Blocks = (function () {
     }
   }
 
-  Blocks.prototype.visible = function (block) {
+  visible(block) {
     return block.aabb.TestOverlap(this.level.camera.aabb)
   }
 
-  Blocks.prototype.compute_aabb = function (block) {
+  compute_aabb(block) {
     var aabb, first, i, len, lower_bound, ref, upper_bound, vertex
     first = true
     lower_bound = {}
@@ -262,7 +268,7 @@ Blocks = (function () {
     return aabb
   }
 
-  Blocks.prototype.sort_blocks_by_texture = function (a, b) {
+  sort_blocks_by_texture(a, b) {
     if (a.usetexture.id > b.usetexture.id) {
       return 1
     }
@@ -271,8 +277,6 @@ Blocks = (function () {
     }
     return 0
   }
-
-  return Blocks
-})()
+}
 
 export default Blocks
