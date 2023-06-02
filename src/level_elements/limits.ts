@@ -1,28 +1,32 @@
 import $ from 'jquery'
 
 import Constants from '../constants.js'
+import Level from '../level.js'
+import Assets from '../utils/assets.js'
+import Theme from '../utils/theme.js'
+import { Pixi, Block2D } from '../temporaryTypes.js'
 
 var b2AABB
 // @ts-ignore
 b2AABB = Box2D.Collision.b2AABB
 
 class Limits {
-  level: any
-  assets: any
-  theme: any
+  level: Level
+  assets: Assets
+  theme: Theme
   player: { left: number; right: number; top: number; bottom: number }
   screen: { left: number; right: number; top: number; bottom: number }
   size: { x: number; y: number }
-  left_wall_aabb: any
-  right_wall_aabb: any
-  bottom_wall_aabb: any
-  top_wall_aabb: any
+  left_wall_aabb: Block2D
+  right_wall_aabb: Block2D
+  bottom_wall_aabb: Block2D
+  top_wall_aabb: Block2D
   texture: string
-  texture_name: any
-  left_sprite: any
-  right_sprite: any
-  bottom_sprite: any
-  top_sprite: any
+  texture_name: string
+  left_sprite: Pixi
+  right_sprite: Pixi
+  bottom_sprite: Pixi
+  top_sprite: Pixi
 
   constructor(level) {
     this.level = level

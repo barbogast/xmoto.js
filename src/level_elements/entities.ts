@@ -1,6 +1,29 @@
 import $ from 'jquery'
 
 import Constants from '../constants.js'
+import Level from '../level.js'
+import Assets from '../utils/assets.js'
+import { World } from '../temporaryTypes.js'
+
+export type Entity = {
+  id: string
+  type_id: string
+  z: number
+  size: {
+    r: number
+    z: number | undefined
+    width: number
+    height: number
+  }
+  position: {
+    x: number
+    y: number
+    angle: number
+  }
+  params: {}
+}
+
+export type PlayerStart = { x: number; y: number }
 
 var b2FixtureDef, b2CircleShape, b2Body, b2BodyDef, b2AABB
 // @ts-ignore
@@ -15,14 +38,14 @@ b2BodyDef = Box2D.Dynamics.b2BodyDef
 b2AABB = Box2D.Collision.b2AABB
 
 class Entities {
-  level: any
-  assets: any
-  world: any
-  list: any[]
-  strawberries: any[]
-  wreckers: any[]
-  end_of_level: any
-  player_start: { x: any; y: any }
+  level: Level
+  assets: Assets
+  world: World
+  list: Entity[]
+  strawberries: Entity[]
+  wreckers: Entity[]
+  end_of_level: Entity
+  player_start: PlayerStart
 
   constructor(level) {
     this.level = level

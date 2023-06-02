@@ -1,18 +1,20 @@
 import $ from 'jquery'
+import Level from '../level'
+import Assets from '../utils/assets'
 
 class Infos {
-  level: any
-  assets: any
-  identifier: any
-  pack_name: any
-  pack_id: any
-  r_version: any
-  name: any
-  description: any
-  author: any
-  date: any
-  border: any
-  music: any
+  level: Level
+  assets: Assets
+  identifier: string
+  pack_name: string
+  pack_id: string
+  r_version: string
+  name: string
+  description: string
+  author: string
+  date: string
+  border: string
+  music: string
 
   constructor(level) {
     this.level = level

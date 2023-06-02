@@ -1,9 +1,12 @@
 import Constants from './constants.js'
+import Level from './level.js'
+import { World } from './temporaryTypes.js'
+import Assets from './utils/assets.js'
 
 class Listeners {
-  level: any
-  assets: any
-  world: any
+  level: Level
+  assets: Assets
+  world: World
 
   constructor(level) {
     this.level = level

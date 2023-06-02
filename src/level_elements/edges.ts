@@ -1,16 +1,20 @@
 import * as Math2D from '../utils/math2d.js'
 import Constants from '../constants.js'
+import Level from '../level.js'
+import Assets from '../utils/assets.js'
+import Theme from '../utils/theme.js'
+import { Block } from './blocks.js'
 
 var b2AABB
 // @ts-ignore
 b2AABB = Box2D.Collision.b2AABB
 
 class Edges {
-  level: any
-  block: any
-  assets: any
-  theme: any
-  list: any[]
+  level: Level
+  block: Block
+  assets: Assets
+  theme: Theme
+  list: Block[]
 
   constructor(level, block?) {
     this.level = level

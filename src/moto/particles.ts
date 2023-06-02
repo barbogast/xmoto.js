@@ -1,10 +1,13 @@
 import Constants from '../constants.js'
+import Level from '../level.js'
+import Physics from '../physics.js'
+import { Block2D, World } from '../temporaryTypes.js'
 
 class Particles {
-  level: any
-  physics: any
-  world: any
-  list: any[]
+  level: Level
+  physics: Physics
+  world: World
+  list: Block2D[]
 
   constructor(level, replay?) {
     this.level = level
@@ -48,7 +51,7 @@ class Particles {
 
   update() {
     var ctx, i, len, particle, position, ref, results
-    ctx = this.level.ctx
+    ctx = this.level.debug_ctx
     ref = this.list
     results = []
     for (i = 0, len = ref.length; i < len; i++) {

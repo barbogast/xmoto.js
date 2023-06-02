@@ -17,6 +17,20 @@ import Entities from './level_elements/entities.js'
 import Replay from './moto/replay.js'
 import Ghosts from './moto/ghosts.js'
 
+export type Options = {
+  canvas: string
+  loading: string
+  chrono: string
+  width: number
+  height: number
+  replays: Replay[]
+  playable: boolean
+  zoom: number
+  levels_path: string
+  scores_path: string
+  replays_path: string
+}
+
 var b2AABB, b2Vec2
 // @ts-ignore
 b2AABB = Box2D.Collision.b2AABB
@@ -25,13 +39,13 @@ b2Vec2 = Box2D.Common.Math.b2Vec2
 
 class Level {
   renderer: any
-  options: any
+  options: Options
   debug_ctx: CanvasRenderingContext2D
   assets: Assets
   camera: Camera
   physics: any
   input: Input
-  listeners: any
+  listeners: Listeners
   moto: Moto
   particles: Particles
   infos: Infos
@@ -45,6 +59,8 @@ class Level {
   ghosts: Ghosts
   start_time: number
   current_time: number
+  stage: any
+  need_to_restart: boolean
 
   constructor(renderer, options) {
     this.renderer = renderer

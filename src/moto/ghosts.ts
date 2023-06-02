@@ -1,13 +1,15 @@
 import Constants from '../constants.js'
+import Level from '../level.js'
+import Assets from '../utils/assets.js'
 import Ghost from './ghost.js'
 import Replay from './replay.js'
 
 class Ghosts {
-  level: any
-  assets: any
+  level: Level
+  assets: Assets
   options: any
   player: Ghost
-  others: any[]
+  others: Ghost[]
 
   constructor(level) {
     this.level = level

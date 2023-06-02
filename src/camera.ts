@@ -2,6 +2,8 @@ import $ from 'jquery'
 
 import Constants from './constants.js'
 import * as Math2D from './utils/math2d.js'
+import Level from './level.js'
+import { Block2D, Pixi } from './temporaryTypes.js'
 
 var b2Vec2, b2AABB
 // @ts-ignore
@@ -10,17 +12,17 @@ b2Vec2 = Box2D.Common.Math.b2Vec2
 b2AABB = Box2D.Collision.b2AABB
 
 class Camera {
-  level: any
+  level: Level
   options: any
   scale: { x: any; y: any }
   translate: { x: number; y: number }
-  scale_container: any
-  translate_container: any
-  negative_z_container: any
-  neutral_z_container: any
-  positive_z_container: any
-  clipping: any
-  aabb: any
+  scale_container: Pixi
+  translate_container: Pixi
+  negative_z_container: Pixi
+  neutral_z_container: Pixi
+  positive_z_container: Pixi
+  clipping: Pixi
+  aabb: Block2D
 
   constructor(level) {
     this.level = level

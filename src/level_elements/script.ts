@@ -1,9 +1,11 @@
 import $ from 'jquery'
+import Level from '../level'
+import Assets from '../utils/assets'
 
 class Script {
-  level: any
-  assets: any
-  code: any
+  level: Level
+  assets: Assets
+  code: string
 
   constructor(level) {
     this.level = level

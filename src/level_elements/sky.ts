@@ -1,21 +1,25 @@
 import $ from 'jquery'
 
 import Constants from '../constants.js'
+import Level from '../level.js'
+import Assets from '../utils/assets.js'
+import Theme from '../utils/theme.js'
+import { Pixi } from '../temporaryTypes.js'
 
 class Sky {
-  level: any
-  assets: any
-  theme: any
+  level: Level
+  assets: Assets
+  theme: Theme
   options: any
-  name: any
+  name: string
   color_r: number
   color_g: number
   color_b: number
   color_a: number
   zoom: number
   offset: number
-  filename: any
-  sprite: any
+  filename: string
+  sprite: Pixi
 
   constructor(level) {
     this.level = level

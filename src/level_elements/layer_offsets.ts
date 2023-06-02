@@ -1,9 +1,17 @@
 import $ from 'jquery'
+import Level from '../level'
+import Assets from '../utils/assets'
+
+type LayerOffset = {
+  x: number
+  y: number
+  front_layer: string
+}
 
 class LayerOffsets {
-  level: any
-  assets: any
-  list: any[]
+  level: Level
+  assets: Assets
+  list: LayerOffset[]
 
   constructor(level) {
     this.level = level

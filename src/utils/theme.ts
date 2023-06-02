@@ -1,11 +1,35 @@
 import $ from 'jquery'
 
+export type Texture = {
+  file: string
+  file_base: string
+  file_ext: string
+  frames: number
+  delay: number
+}
+
+export type Sprite = {
+  file: string
+  file_base: string
+  file_ext: string
+  size: {
+    width: number
+    height: number
+  }
+  center: {
+    x: number
+    y: number
+  }
+  frames: number
+  delay: number
+}
+
 class Theme {
-  filename: any
-  callback: any
+  filename: string
+  callback: () => {}
   sprites: any[]
   edges: any[]
-  textures: any[]
+  textures: Texture[]
 
   constructor(filename, callback) {
     this.filename = filename

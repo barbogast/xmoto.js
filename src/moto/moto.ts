@@ -3,6 +3,11 @@ import Constants from '../constants.js'
 import Physics from '../physics.js'
 import * as Math2D from '../utils/math2d.js'
 import * as MotoFlipService from '../services/moto_flip_service.js'
+import Level from '../level.js'
+import Assets from '../utils/assets.js'
+import Ghost from './ghost.js'
+import { PlayerStart } from '../level_elements/entities.js'
+import { Block2D, World } from '../temporaryTypes.js'
 
 var b2Body,
   b2BodyDef,
@@ -36,29 +41,29 @@ b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef
 b2AABB = Box2D.Collision.b2AABB
 
 class Moto {
-  level: any
-  assets: any
-  world: any
+  level: Level
+  assets: Assets
+  world: World
   mirror: number
   dead: boolean
-  ghost: any
-  rider: any
-  player_start: any
-  left_revolute_joint: any
-  right_revolute_joint: any
-  left_prismatic_joint: any
-  right_prismatic_joint: any
-  aabb: any
-  body: any
-  left_wheel: any
-  right_wheel: any
-  left_axle: any
-  right_axle: any
-  body_sprite: any
-  left_wheel_sprite: any
-  right_wheel_sprite: any
-  left_axle_sprite: any
-  right_axle_sprite: any
+  ghost: Ghost
+  rider: Rider
+  player_start: PlayerStart
+  left_revolute_joint: Block2D
+  right_revolute_joint: Block2D
+  left_prismatic_joint: Block2D
+  right_prismatic_joint: Block2D
+  aabb: Block2D
+  body: Block2D
+  left_wheel: Block2D
+  right_wheel: Block2D
+  left_axle: Block2D
+  right_axle: Block2D
+  body_sprite: Block2D
+  left_wheel_sprite: Block2D
+  right_wheel_sprite: Block2D
+  left_axle_sprite: Block2D
+  right_axle_sprite: Block2D
 
   constructor(level, ghost?) {
     if (ghost == null) {
@@ -159,7 +164,7 @@ class Moto {
     return this.rider.init_sprites()
   }
 
-  move(input) {
+  move(input?) {
     var air_density,
       back_force,
       biker_force,

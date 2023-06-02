@@ -1,6 +1,12 @@
 import Constants from '../constants.js'
+import Level from '../level.js'
+import { PlayerStart } from '../level_elements/entities.js'
 import Physics from '../physics.js'
+import { Block2D } from '../temporaryTypes.js'
+import Assets from '../utils/assets.js'
 import * as Math2D from '../utils/math2d.js'
+import Ghost from './ghost.js'
+import Moto from './moto.js'
 
 var b2Body,
   b2BodyDef,
@@ -31,32 +37,32 @@ b2PrismaticJointDef = Box2D.Dynamics.Joints.b2PrismaticJointDef
 b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef
 
 class Rider {
-  level: any
-  assets: any
+  level: Level
+  assets: Assets
   world: any
-  moto: any
-  mirror: any
-  ghost: any
-  player_start: any
-  neck_joint: any
-  ankle_joint: any
-  wrist_joint: any
-  knee_joint: any
-  elbow_joint: any
-  shoulder_joint: any
-  hip_joint: any
-  head: any
-  torso: any
-  lower_leg: any
-  upper_leg: any
-  lower_arm: any
-  upper_arm: any
-  head_sprite: any
-  torso_sprite: any
-  lower_leg_sprite: any
-  upper_leg_sprite: any
-  lower_arm_sprite: any
-  upper_arm_sprite: any
+  moto: Moto
+  mirror: number
+  ghost: Ghost
+  player_start: PlayerStart
+  neck_joint: Block2D
+  ankle_joint: Block2D
+  wrist_joint: Block2D
+  knee_joint: Block2D
+  elbow_joint: Block2D
+  shoulder_joint: Block2D
+  hip_joint: Block2D
+  head: Block2D
+  torso: Block2D
+  lower_leg: Block2D
+  upper_leg: Block2D
+  lower_arm: Block2D
+  upper_arm: Block2D
+  head_sprite: Block2D
+  torso_sprite: Block2D
+  lower_leg_sprite: Block2D
+  upper_leg_sprite: Block2D
+  lower_arm_sprite: Block2D
+  upper_arm_sprite: Block2D
 
   constructor(level, moto) {
     this.level = level

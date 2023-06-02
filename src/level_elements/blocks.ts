@@ -2,6 +2,34 @@ import $ from 'jquery'
 
 import Edges from './edges.js'
 import Constants from '../constants.js'
+import Level from '../level.js'
+import Assets from '../utils/assets.js'
+import Theme from '../utils/theme.js'
+
+export type Block = {
+  id: string
+  position: {
+    x: number
+    y: number
+    dynamic: boolean
+    background: boolean
+  }
+  usetexture: {
+    id: string
+    scale: number
+  }
+  physics: {
+    grip: number
+  }
+  edges: {
+    angle: number
+    materials: []
+  }
+  vertices: number[]
+  sprite: {
+    visible: boolean
+  }
+}
 
 var b2AABB
 
@@ -9,13 +37,13 @@ var b2AABB
 b2AABB = Box2D.Collision.b2AABB
 
 class Blocks {
-  level: any
-  assets: any
-  theme: any
-  list: any[]
-  back_list: any[]
-  front_list: any[]
-  edges: any
+  level: Level
+  assets: Assets
+  theme: Theme
+  list: Block[]
+  back_list: Block[]
+  front_list: Block[]
+  edges: Edges
 
   constructor(level) {
     this.level = level

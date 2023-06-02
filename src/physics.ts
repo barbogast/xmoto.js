@@ -1,5 +1,8 @@
+import Camera from './camera.js'
 import Constants from './constants.js'
+import Level, { Options } from './level.js'
 import Ghost from './moto/ghost.js'
+import { World } from './temporaryTypes.js'
 
 var b2AABB,
   b2Body,
@@ -48,11 +51,11 @@ b2MouseJointDef = Box2D.Dynamics.Joints.b2MouseJointDef
 b2Settings = Box2D.Common.b2Settings
 
 class Physics {
-  level: any
-  options: any
-  camera: any
-  world: any
-  debug_ctx: any
+  level: Level
+  options: Options
+  camera: Camera
+  world: World
+  debug_ctx: CanvasRenderingContext2D
   last_step: number
   step: number
   steps: number

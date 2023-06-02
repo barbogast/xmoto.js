@@ -1,10 +1,12 @@
+import Level from '../level.js'
 import Moto from './moto.js'
+import Replay from './replay.js'
 
 class Ghost {
-  level: any
-  replay: any
-  transparent: any
-  moto: any
+  level: Level
+  replay: Replay
+  transparent: boolean
+  moto: Moto
 
   constructor(level, replay, transparent?) {
     if (transparent == null) {

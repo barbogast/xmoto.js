@@ -1,8 +1,10 @@
 import $ from 'jquery'
+import Level from './level'
+import Assets from './utils/assets'
 
 class Input {
-  level: any
-  assets: any
+  level: Level
+  assets: Assets
   up: boolean
   down: boolean
   left: boolean
