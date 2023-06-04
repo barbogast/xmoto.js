@@ -12,13 +12,13 @@ import { Block2D, World } from '../temporaryTypes.js'
 var b2Body,
   b2BodyDef,
   b2CircleShape,
-  b2Fixture,
   b2FixtureDef,
   b2PolygonShape,
   b2PrismaticJointDef,
   b2RevoluteJointDef,
   b2Vec2,
   b2AABB
+
 // @ts-ignore
 b2Vec2 = Box2D.Common.Math.b2Vec2
 // @ts-ignore
@@ -27,8 +27,6 @@ b2BodyDef = Box2D.Dynamics.b2BodyDef
 b2Body = Box2D.Dynamics.b2Body
 // @ts-ignore
 b2FixtureDef = Box2D.Dynamics.b2FixtureDef
-// @ts-ignore
-b2Fixture = Box2D.Dynamics.b2Fixture
 // @ts-ignore
 b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
 // @ts-ignore

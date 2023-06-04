@@ -144,7 +144,6 @@ class Camera {
   }
 
   target() {
-    const options = this.level.options
     const position = this.active_object().GetPosition()
     const adjusted_position = {
       x: position.x + this.translate.x,

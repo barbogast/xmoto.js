@@ -11,14 +11,10 @@ import Moto from './moto.js'
 var b2Body,
   b2BodyDef,
   b2CircleShape,
-  b2Fixture,
   b2FixtureDef,
   b2PolygonShape,
-  b2PrismaticJointDef,
-  b2RevoluteJointDef,
-  b2Vec2
-// @ts-ignore
-b2Vec2 = Box2D.Common.Math.b2Vec2
+  b2RevoluteJointDef
+
 // @ts-ignore
 b2BodyDef = Box2D.Dynamics.b2BodyDef
 // @ts-ignore
@@ -26,13 +22,9 @@ b2Body = Box2D.Dynamics.b2Body
 // @ts-ignore
 b2FixtureDef = Box2D.Dynamics.b2FixtureDef
 // @ts-ignore
-b2Fixture = Box2D.Dynamics.b2Fixture
-// @ts-ignore
 b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
 // @ts-ignore
 b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
-// @ts-ignore
-b2PrismaticJointDef = Box2D.Dynamics.Joints.b2PrismaticJointDef
 // @ts-ignore
 b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef
 
@@ -323,9 +315,6 @@ class Rider {
 
       const position = part.GetPosition()
       const angle = part.GetAngle()
-      const texture = this.ghost
-        ? part_constants.ghost_texture
-        : part_constants.texture
 
       sprite.width = part_constants.texture_size.x
       sprite.height = part_constants.texture_size.y

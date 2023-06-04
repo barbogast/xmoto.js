@@ -31,12 +31,6 @@ export type Options = {
   replays_path: string
 }
 
-var b2AABB, b2Vec2
-// @ts-ignore
-b2AABB = Box2D.Collision.b2AABB
-// @ts-ignore
-b2Vec2 = Box2D.Common.Math.b2Vec2
-
 class Level {
   renderer: any
   options: Options

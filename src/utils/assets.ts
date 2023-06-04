@@ -1,5 +1,3 @@
-import $ from 'jquery'
-
 import Theme from './theme.js'
 
 type Item = { id: string; src: string }
