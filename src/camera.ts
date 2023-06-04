@@ -5,11 +5,10 @@ import * as Math2D from './utils/math2d.js'
 import Level from './level.js'
 import { Block2D, Pixi } from './temporaryTypes.js'
 
-var b2Vec2, b2AABB
 // @ts-ignore
-b2Vec2 = Box2D.Common.Math.b2Vec2
+const b2Vec2 = Box2D.Common.Math.b2Vec2
 // @ts-ignore
-b2AABB = Box2D.Collision.b2AABB
+const b2AABB = Box2D.Collision.b2AABB
 
 class Camera {
   level: Level

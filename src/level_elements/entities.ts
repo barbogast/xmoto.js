@@ -40,17 +40,16 @@ export type Entity = {
 
 export type PlayerStart = { x: number; y: number }
 
-var b2FixtureDef, b2CircleShape, b2Body, b2BodyDef, b2AABB
 // @ts-ignore
-b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+const b2FixtureDef = Box2D.Dynamics.b2FixtureDef
 // @ts-ignore
-b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
+const b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
 // @ts-ignore
-b2Body = Box2D.Dynamics.b2Body.b2_staticBody
+const b2Body = Box2D.Dynamics.b2Body.b2_staticBody
 // @ts-ignore
-b2BodyDef = Box2D.Dynamics.b2BodyDef
+const b2BodyDef = Box2D.Dynamics.b2BodyDef
 // @ts-ignore
-b2AABB = Box2D.Collision.b2AABB
+const b2AABB = Box2D.Collision.b2AABB
 
 class Entities {
   level: Level

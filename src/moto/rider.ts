@@ -8,25 +8,18 @@ import * as Math2D from '../utils/math2d.js'
 import Ghost from './ghost.js'
 import Moto from './moto.js'
 
-var b2Body,
-  b2BodyDef,
-  b2CircleShape,
-  b2FixtureDef,
-  b2PolygonShape,
-  b2RevoluteJointDef
-
 // @ts-ignore
-b2BodyDef = Box2D.Dynamics.b2BodyDef
+const b2BodyDef = Box2D.Dynamics.b2BodyDef
 // @ts-ignore
-b2Body = Box2D.Dynamics.b2Body
+const b2Body = Box2D.Dynamics.b2Body
 // @ts-ignore
-b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+const b2FixtureDef = Box2D.Dynamics.b2FixtureDef
 // @ts-ignore
-b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+const b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
 // @ts-ignore
-b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
+const b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
 // @ts-ignore
-b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef
+const b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef
 
 class Rider {
   level: Level

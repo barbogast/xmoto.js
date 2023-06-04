@@ -9,34 +9,24 @@ import Ghost from './ghost.js'
 import { PlayerStart } from '../level_elements/entities.js'
 import { Block2D, World } from '../temporaryTypes.js'
 
-var b2Body,
-  b2BodyDef,
-  b2CircleShape,
-  b2FixtureDef,
-  b2PolygonShape,
-  b2PrismaticJointDef,
-  b2RevoluteJointDef,
-  b2Vec2,
-  b2AABB
-
 // @ts-ignore
-b2Vec2 = Box2D.Common.Math.b2Vec2
+const b2Vec2 = Box2D.Common.Math.b2Vec2
 // @ts-ignore
-b2BodyDef = Box2D.Dynamics.b2BodyDef
+const b2BodyDef = Box2D.Dynamics.b2BodyDef
 // @ts-ignore
-b2Body = Box2D.Dynamics.b2Body
+const b2Body = Box2D.Dynamics.b2Body
 // @ts-ignore
-b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+const b2FixtureDef = Box2D.Dynamics.b2FixtureDef
 // @ts-ignore
-b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+const b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
 // @ts-ignore
-b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
+const b2CircleShape = Box2D.Collision.Shapes.b2CircleShape
 // @ts-ignore
-b2PrismaticJointDef = Box2D.Dynamics.Joints.b2PrismaticJointDef
+const b2PrismaticJointDef = Box2D.Dynamics.Joints.b2PrismaticJointDef
 // @ts-ignore
-b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef
+const b2RevoluteJointDef = Box2D.Dynamics.Joints.b2RevoluteJointDef
 // @ts-ignore
-b2AABB = Box2D.Collision.b2AABB
+const b2AABB = Box2D.Collision.b2AABB
 
 class Moto {
   level: Level

@@ -21,9 +21,8 @@ export type Edge = {
   sprite?: Pixi
 }
 
-var b2AABB
 // @ts-ignore
-b2AABB = Box2D.Collision.b2AABB
+const b2AABB = Box2D.Collision.b2AABB
 
 class Edges {
   level: Level

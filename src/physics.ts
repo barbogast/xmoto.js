@@ -4,30 +4,22 @@ import Level, { Options } from './level.js'
 import Ghost from './moto/ghost.js'
 import { World } from './temporaryTypes.js'
 
-var b2Body,
-  b2BodyDef,
-  b2DebugDraw,
-  b2FixtureDef,
-  b2PolygonShape,
-  b2Settings,
-  b2Vec2,
-  b2World
 // @ts-ignore
-b2World = Box2D.Dynamics.b2World
+const b2World = Box2D.Dynamics.b2World
 // @ts-ignore
-b2Vec2 = Box2D.Common.Math.b2Vec2
+const b2Vec2 = Box2D.Common.Math.b2Vec2
 // @ts-ignore
-b2BodyDef = Box2D.Dynamics.b2BodyDef
+const b2BodyDef = Box2D.Dynamics.b2BodyDef
 // @ts-ignore
-b2Body = Box2D.Dynamics.b2Body
+const b2Body = Box2D.Dynamics.b2Body
 // @ts-ignore
-b2FixtureDef = Box2D.Dynamics.b2FixtureDef
+const b2FixtureDef = Box2D.Dynamics.b2FixtureDef
 // @ts-ignore
-b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
+const b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape
 // @ts-ignore
-b2DebugDraw = Box2D.Dynamics.b2DebugDraw
+const b2DebugDraw = Box2D.Dynamics.b2DebugDraw
 // @ts-ignore
-b2Settings = Box2D.Common.b2Settings
+const b2Settings = Box2D.Common.b2Settings
 
 class Physics {
   level: Level

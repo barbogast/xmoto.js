@@ -52,10 +52,8 @@ export type Block = {
   aabb?: Block2D
 }
 
-var b2AABB
-
 // @ts-ignore
-b2AABB = Box2D.Collision.b2AABB
+const b2AABB = Box2D.Collision.b2AABB
 
 class Blocks {
   level: Level

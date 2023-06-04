@@ -6,9 +6,8 @@ import Assets from '../utils/assets.js'
 import Theme from '../utils/theme.js'
 import { Pixi, Block2D } from '../temporaryTypes.js'
 
-var b2AABB
 // @ts-ignore
-b2AABB = Box2D.Collision.b2AABB
+const b2AABB = Box2D.Collision.b2AABB
 
 class Limits {
   level: Level
