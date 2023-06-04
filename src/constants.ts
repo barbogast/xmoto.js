@@ -379,9 +379,8 @@ Constants = {
   // CHAIN REACTION OF SOME ATTRIBUTES
   //
   chain_reaction: function () {
-    var element, i, len, ref, results
     if (this.hooking === true) {
-      ref = [
+      const elements = [
         'body',
         'left_axle',
         'right_axle',
@@ -391,12 +390,9 @@ Constants = {
         'lower_arm',
         'upper_arm',
       ]
-      results = []
-      for (i = 0, len = ref.length; i < len; i++) {
-        element = ref[i]
-        results.push((Constants[element].collisions = false))
+      for (const element of elements) {
+        Constants[element].collisions = false
       }
-      return results
     }
   },
 }
