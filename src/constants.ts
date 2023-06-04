@@ -2,43 +2,77 @@ var Constants, b2Vec2
 // @ts-ignore
 b2Vec2 = Box2D.Common.Math.b2Vec2
 
-Constants = (function () {
-  function Constants() {}
+Constants = {
+  //
+  // GENERAL
+  //
 
-  Constants.debug = false
+  // Panel on the right to debug everything
+  debug: false,
 
-  Constants.debug_physics = false
+  // "Ugly" mode to debug physics
+  debug_physics: false,
 
-  Constants.debug_clipping = false
+  // Debug clipping of sprites
+  debug_clipping: false,
 
-  Constants.hooking = false
+  // Hooking is a special trick in XMoto that allow the bike
+  // to "hook" on blocks (http://www.youtube.com/watch?v=ebCgtnm_1m0)
+  // (no collisions and no kill except for head)
+  hooking: false,
 
-  Constants.gravity = 9.81
+  // Default gravity of the game
+  gravity: 9.81,
 
-  Constants.max_moto_speed = 70.0
+  // Max rotation speed of the wheels. Limit the max speed of the moto
+  max_moto_speed: 70.0,
 
-  Constants.air_density = 0.02
+  // Friction of air
+  air_density: 0.02,
 
-  Constants.moto_acceleration = 9.0
+  // Acceleration of moto
+  moto_acceleration: 9.0,
 
-  Constants.biker_force = 11.0
+  // Force of biker when he rotates the moto
+  biker_force: 11.0,
 
-  Constants.fps = 60.0
+  //
+  // FRAMERATE
+  //
+  fps: 60.0,
 
-  Constants.replay_key_step = 60
+  //
+  // REPLAYS
+  //
 
-  Constants.replay_key_step_precision = 4
+  // Key step every x steps during replay (to beat non-deterministic behaviour)
+  // See https://github.com/MichaelHoste/xmoto.js/issues/8
+  replay_key_step: 60,
 
-  Constants.automatic_scale = true
+  // Number of decimals when saving key step position
+  replay_key_step_precision: 4,
 
-  Constants.manual_scale = true
+  //
+  // DISPLAY
+  //
 
-  Constants.default_scale = {
+  // camera zoom and dezoom when moto speed changes (can be both)
+  automatic_scale: true,
+
+  // camera zoom and dezoom when player scrolls up and down (can be both)
+  manual_scale: true,
+
+  // default zoom of the camera
+  default_scale: {
     x: 70.0,
     y: -70.0,
-  }
+  },
 
-  Constants.body = {
+  //
+  // MOTO PARTS
+  //
+
+  body: {
     density: 1.5,
     restitution: 0.5,
     friction: 1.0,
@@ -59,9 +93,9 @@ Constants = (function () {
       x: 2.0,
       y: 1.0,
     },
-  }
+  },
 
-  Constants.left_wheel = {
+  left_wheel: {
     radius: 0.35,
     density: 1.8,
     restitution: 0.3,
@@ -73,9 +107,9 @@ Constants = (function () {
     collisions: true,
     texture: 'playerbikerwheel',
     ghost_texture: 'ghostbikerwheel',
-  }
+  },
 
-  Constants.right_wheel = {
+  right_wheel: {
     radius: 0.35,
     density: 1.8,
     restitution: 0.3,
@@ -87,9 +121,9 @@ Constants = (function () {
     collisions: true,
     texture: 'playerbikerwheel',
     ghost_texture: 'ghostbikerwheel',
-  }
+  },
 
-  Constants.left_axle = {
+  left_axle: {
     density: 1.0,
     restitution: 0.5,
     friction: 1.0,
@@ -106,9 +140,9 @@ Constants = (function () {
     collisions: true,
     texture: 'rear1',
     ghost_texture: 'rear_ghost',
-  }
+  },
 
-  Constants.right_axle = {
+  right_axle: {
     density: 1.5,
     restitution: 0.5,
     friction: 1.0,
@@ -125,9 +159,13 @@ Constants = (function () {
     collisions: true,
     texture: 'front1',
     ghost_texture: 'front_ghost',
-  }
+  },
 
-  Constants.head = {
+  //
+  // RIDER PARTS
+  //
+
+  head: {
     density: 0.4,
     restitution: 0.0,
     friction: 1.0,
@@ -137,9 +175,9 @@ Constants = (function () {
     },
     radius: 0.18,
     collisions: true,
-  }
+  },
 
-  Constants.torso = {
+  torso: {
     density: 0.4,
     restitution: 0.0,
     friction: 1.0,
@@ -161,9 +199,9 @@ Constants = (function () {
       x: 0.5,
       y: 1.2,
     },
-  }
+  },
 
-  Constants.lower_leg = {
+  lower_leg: {
     density: 0.4,
     restitution: 0.0,
     friction: 1.0,
@@ -187,9 +225,9 @@ Constants = (function () {
       x: 0.4,
       y: 0.66,
     },
-  }
+  },
 
-  Constants.upper_leg = {
+  upper_leg: {
     density: 0.4,
     restitution: 0.0,
     friction: 1.0,
@@ -211,9 +249,9 @@ Constants = (function () {
       x: 0.78,
       y: 0.28,
     },
-  }
+  },
 
-  Constants.lower_arm = {
+  lower_arm: {
     density: 0.4,
     restitution: 0.0,
     friction: 1.0,
@@ -235,9 +273,9 @@ Constants = (function () {
       x: 0.53,
       y: 0.2,
     },
-  }
+  },
 
-  Constants.upper_arm = {
+  upper_arm: {
     density: 0.4,
     restitution: 0.0,
     friction: 1.0,
@@ -259,73 +297,88 @@ Constants = (function () {
       x: 0.24,
       y: 0.56,
     },
-  }
+  },
 
-  Constants.left_suspension = {
+  //
+  // MOTO JOINTS
+  //
+
+  left_suspension: {
     angle: new b2Vec2(0, 1),
     lower_translation: -0.03,
     upper_translation: 0.2,
     back_force: 3.0,
     rigidity: 8.0,
-  }
+  },
 
-  Constants.right_suspension = {
+  right_suspension: {
     angle: new b2Vec2(-0.2, 1),
     lower_translation: -0.01,
     upper_translation: 0.2,
     back_force: 3.0,
     rigidity: 4.0,
-  }
+  },
 
-  Constants.ankle = {
+  //
+  // RIDER JOINTS
+  //
+
+  ankle: {
     axe_position: {
       x: -0.18,
       y: -0.2,
     },
-  }
+  },
 
-  Constants.wrist = {
+  wrist: {
     axe_position: {
       x: 0.25,
       y: -0.07,
     },
-  }
+  },
 
-  Constants.knee = {
+  knee: {
     axe_position: {
       x: 0.12,
       y: 0.28,
     },
-  }
+  },
 
-  Constants.elbow = {
+  elbow: {
     axe_position: {
       x: 0.03,
       y: -0.21,
     },
-  }
+  },
 
-  Constants.shoulder = {
+  shoulder: {
     axe_position: {
       x: -0.12,
       y: 0.22,
     },
-  }
+  },
 
-  Constants.hip = {
+  hip: {
     axe_position: {
       x: -0.25,
       y: 0.14,
     },
-  }
+  },
 
-  Constants.ground = {
+  //
+  // GROUND
+  //
+
+  ground: {
     density: 1.0,
     restitution: 0.2,
     friction: 1.2,
-  }
+  },
 
-  Constants.chain_reaction = function () {
+  //
+  // CHAIN REACTION OF SOME ATTRIBUTES
+  //
+  chain_reaction: function () {
     var element, i, len, ref, results
     if (this.hooking === true) {
       ref = [
@@ -345,11 +398,9 @@ Constants = (function () {
       }
       return results
     }
-  }
+  },
+}
 
-  Constants.chain_reaction()
-
-  return Constants
-})()
+Constants.chain_reaction()
 
 export default Constants

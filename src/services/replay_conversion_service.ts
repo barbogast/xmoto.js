@@ -1,11 +1,15 @@
+// Convert replay from object to minified string to be send to the server
+// And vice versa
+
 import LZString from 'lz-string'
 
 import Constants from '../constants.js'
+import { ReplayInputs } from '../moto/replay.js'
 
+// String is like : "keyA:199,240,569|keyB:29,40,55..."
 export function inputs_to_string(inputs) {
-  var j, k, key, len, len1, ref, ref1, step, string
-  string = ''
-  ref = [
+  let string = ''
+  const keys = [
     'up_down',
     'up_up',
     'down_down',
@@ -16,37 +20,43 @@ export function inputs_to_string(inputs) {
     'right_up',
     'space_pressed',
   ]
-  for (j = 0, len = ref.length; j < len; j++) {
-    key = ref[j]
+  for (const key of keys) {
     string += key + ':'
-    ref1 = inputs[key]
-    for (k = 0, len1 = ref1.length; k < len1; k++) {
-      step = ref1[k]
+    for (const step of inputs[key]) {
       string += step + ','
     }
     if (string[string.length - 1] === ',') {
-      string = string.slice(0, -1)
+      string = string.slice(0, -1) // remove last ',' if any
     }
     string += '|'
   }
-  string = string.slice(0, -1)
+  string = string.slice(0, -1) // remove last '|'
   return LZString.compressToBase64(string)
 }
 
-export function string_to_inputs(string) {
-  var i, inputs, j, k, key, keys, len, len1, name, splitted, step, values
-  inputs = {}
+export function string_to_inputs(string): ReplayInputs {
+  const inputs = {
+    up_down: [],
+    up_up: [],
+    down_down: [],
+    down_up: [],
+    left_down: [],
+    left_up: [],
+    right_down: [],
+    right_up: [],
+    space_pressed: [],
+  }
   string = LZString.decompressFromBase64(string)
-  keys = string.split('|')
-  for (j = 0, len = keys.length; j < len; j++) {
-    key = keys[j]
-    splitted = key.split(':')
-    name = splitted[0]
-    values = splitted[1].split(',')
+  const keys = string.split('|')
+
+  for (const key of keys) {
+    const splitted = key.split(':')
+    const name = splitted[0]
+    const values = splitted[1].split(',')
+
     inputs[name] = []
     if (values[0] !== '') {
-      for (i = k = 0, len1 = values.length; k < len1; i = ++k) {
-        step = values[i]
+      for (const [i, step] of values.entries()) {
         inputs[name][i] = parseInt(step)
       }
     }
@@ -54,12 +64,14 @@ export function string_to_inputs(string) {
   return inputs
 }
 
+// String is like : "60@step1=step2=step3=..." where 60 is the key-step interval of the replay
+// step1 is like : "part1_positions|part2_positions|...|part10_positions"
+// part1_positions is like : "11.1234,22.1234,33.1234,44.1234,55.1234,66.1234" (each position and angle values)
 export function key_steps_to_string(key_steps) {
-  var a, b, c, d, e, f, j, key, key_step, len, ref, step, string
-  string = Constants.replay_key_step + '@'
-  for (step in key_steps) {
-    key_step = key_steps[step]
-    ref = [
+  let string = Constants.replay_key_step + '@'
+  for (const step in key_steps) {
+    const key_step = key_steps[step]
+    const keys = [
       'body',
       'left_wheel',
       'right_wheel',
@@ -71,62 +83,52 @@ export function key_steps_to_string(key_steps) {
       'upper_arm',
       'lower_arm',
     ]
-    for (j = 0, len = ref.length; j < len; j++) {
-      key = ref[j]
-      a = key_step[key].position.x.toFixed(Constants.replay_key_step_precision)
-      b = key_step[key].position.y.toFixed(Constants.replay_key_step_precision)
-      c = key_step[key].angle.toFixed(Constants.replay_key_step_precision)
-      d = key_step[key].linear_velocity.x.toFixed(
+    for (const key of keys) {
+      const a = key_step[key].position.x.toFixed(
         Constants.replay_key_step_precision
       )
-      e = key_step[key].linear_velocity.y.toFixed(
+      const b = key_step[key].position.y.toFixed(
         Constants.replay_key_step_precision
       )
-      f = key_step[key].angular_velocity.toFixed(
+      const c = key_step[key].angle.toFixed(Constants.replay_key_step_precision)
+      const d = key_step[key].linear_velocity.x.toFixed(
+        Constants.replay_key_step_precision
+      )
+      const e = key_step[key].linear_velocity.y.toFixed(
+        Constants.replay_key_step_precision
+      )
+      const f = key_step[key].angular_velocity.toFixed(
         Constants.replay_key_step_precision
       )
       string += a + ',' + b + ',' + c + ',' + d + ',' + e + ',' + f + '|'
     }
-    string = string.slice(0, -1)
+    string = string.slice(0, -1) // remove last '|'
     string += '='
   }
   if (string[string.length - 1] === '=') {
     string = string.slice(0, -1)
   }
+
   return LZString.compressToBase64(string)
 }
 
-export function string_to_key_steps(string) {
-  var current_interval,
-    element,
-    i,
-    j,
-    k,
-    key_step,
-    key_step_string,
-    key_steps,
-    key_steps_string,
-    len,
-    len1,
-    part_string,
-    ref,
-    ref1,
-    step_interval,
-    value_string
-  key_steps = {}
+export function string_to_key_steps(string: string) {
+  const key_steps = {}
   string = LZString.decompressFromBase64(string)
-  key_steps_string = string.split('@')[1]
-  step_interval = parseInt(string.split('@')[0])
-  current_interval = step_interval
+  const key_steps_string = string.split('@')[1]
+
+  const step_interval = parseInt(string.split('@')[0])
+  let current_interval = step_interval
+
+  // If no "=", then there are no key-steps and we return empty object
   if (key_steps_string.indexOf('=') === -1) {
     return key_steps
   }
-  ref = key_steps_string.split('=')
-  for (j = 0, len = ref.length; j < len; j++) {
-    key_step_string = ref[j]
-    key_step = {}
-    part_string = key_step_string.split('|')
-    ref1 = [
+
+  for (const key_step_string of key_steps_string.split('=')) {
+    const key_step = {}
+    const part_string = key_step_string.split('|')
+    const elements = [
       'body',
       'left_wheel',
       'right_wheel',
@@ -138,9 +140,8 @@ export function string_to_key_steps(string) {
       'upper_arm',
       'lower_arm',
     ]
-    for (i = k = 0, len1 = ref1.length; k < len1; i = ++k) {
-      element = ref1[i]
-      value_string = part_string[i].split(',')
+    for (const [i, element] of elements.entries()) {
+      const value_string = part_string[i].split(',')
       key_step[element] = {
         position: {
           x: parseFloat(value_string[0]),
@@ -154,6 +155,7 @@ export function string_to_key_steps(string) {
         angular_velocity: parseFloat(value_string[5]),
       }
     }
+
     key_steps[current_interval] = key_step
     current_interval += step_interval
   }

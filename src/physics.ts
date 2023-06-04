@@ -61,71 +61,68 @@ class Physics {
   steps: number
 
   constructor(level) {
-    var debugDraw
     this.level = level
     this.options = level.options
     this.camera = level.camera
-    this.world = new b2World(new b2Vec2(0, -Constants.gravity), true)
+    this.world = new b2World(new b2Vec2(0, -Constants.gravity), true) // gravity vector, and doSleep
     this.debug_ctx = level.debug_ctx
+
+    // Double default precision between wheel and ground
     b2Settings.b2_linearSlop = 0.0025
-    debugDraw = new b2DebugDraw()
-    debugDraw.SetSprite(this.debug_ctx)
-    this.debug_ctx.lineWidth = 0.05
-    debugDraw.SetFillAlpha(0.5)
-    debugDraw.m_sprite.graphics.clear = function () {}
+
+    // debug initialization
+    const debugDraw = new b2DebugDraw()
+    debugDraw.SetSprite(this.debug_ctx) // context
+    this.debug_ctx.lineWidth = 0.05 // thickness of line (debugDraw.SetLineThickness doesn't work)
+    debugDraw.SetFillAlpha(0.5) // transparency
+    debugDraw.m_sprite.graphics.clear = () => {} // Don't allow box2D to (badly) clear the canvas
+
+    // Assign debug to world
     debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit)
     this.world.SetDebugDraw(debugDraw)
-    this.world
   }
 
   init() {
     this.last_step = new Date().getTime()
     this.step = 1000.0 / Constants.fps
-    return (this.steps = 0)
+    this.steps = 0
   }
 
   restart() {
-    var player_ghost, replay, time
-    replay = this.level.replay
-    player_ghost = this.level.ghosts.player
+    const replay = this.level.replay
+    const player_ghost = this.level.ghosts.player
+
+    // save replay if better (local + server)
     if (replay.success) {
-      time = (replay.steps / 60.0).toFixed(2).replace('.', ':')
+      const time = (replay.steps / 60.0).toFixed(2).replace('.', ':')
       if (!player_ghost || player_ghost.replay.steps > replay.steps) {
         this.save_replay_and_init_ghosts(replay)
         console.log(
-          'WIN : you improved your personal score : ' +
-            time +
-            ' (' +
-            replay.steps +
-            ' steps)'
+          `WIN : you improved your personal score : ${time} (${replay.steps} steps)`
         )
       } else {
         console.log(
-          "FAIL : you didn't improve your personal score : " +
-            time +
-            ' (' +
-            replay.steps +
-            ' steps)'
+          `FAIL : you didn't improve your personal score : ${time} (${replay.steps} steps)`
         )
       }
     }
+
     this.level.restart()
-    return this.init()
+    this.init()
   }
 
   save_replay_and_init_ghosts(replay) {
-    replay.add_step()
+    replay.add_step() // add last step
     replay.save()
     this.level.ghosts.player = new Ghost(this.level, replay.clone())
-    return this.level.ghosts.init()
+    this.level.ghosts.init()
   }
 
   update() {
-    var results
-    results = []
     while (new Date().getTime() - this.last_step > this.step) {
       this.steps = this.steps + 1
       this.last_step += this.step
+
       this.level.moto.move()
       this.level.ghosts.move()
       this.level.replay.add_step()
@@ -133,81 +130,87 @@ class Physics {
       this.world.Step(1.0 / Constants.fps, 10, 10)
       this.world.ClearForces()
       this.level.input.space = false
+
       if (this.level.need_to_restart) {
         this.restart()
-        results.push((this.level.need_to_restart = false))
-      } else {
-        results.push(void 0)
+        this.level.need_to_restart = false
       }
     }
-    return results
   }
 
-  create_polygon(vertices, name, density, restitution, friction, group_index) {
-    var bodyDef, fixDef
-    if (density == null) {
-      density = 1.0
-    }
-    if (restitution == null) {
-      restitution = 0.5
-    }
-    if (friction == null) {
-      friction = 1.0
-    }
-    if (group_index == null) {
-      group_index = -2
-    }
-    fixDef = new b2FixtureDef()
+  create_polygon(
+    vertices,
+    name,
+    density = 1.0,
+    restitution = 0.5,
+    friction = 1.0,
+    group_index = -2
+  ) {
+    // Create fixture
+    const fixDef = new b2FixtureDef()
+
     fixDef.shape = new b2PolygonShape()
     fixDef.density = density
     fixDef.restitution = restitution
     fixDef.friction = friction
     fixDef.filter.groupIndex = group_index
+
+    // Create polygon
     Physics.create_shape(fixDef, vertices)
-    bodyDef = new b2BodyDef()
+
+    // Create body
+    const bodyDef = new b2BodyDef()
     bodyDef.position.x = 0
     bodyDef.position.y = 0
+
     bodyDef.userData = {
       name: name,
     }
+
     bodyDef.type = b2Body.b2_staticBody
-    return this.world.CreateBody(bodyDef).CreateFixture(fixDef)
+
+    // Assign fixture to body and add body to 2D world
+    this.world.CreateBody(bodyDef).CreateFixture(fixDef)
   }
 
-  create_lines(block, name, density, restitution, friction, group_index) {
-    var body, bodyDef, fixDef, i, j, len, ref, results, vertex, vertex1, vertex2
-    if (density == null) {
-      density = 1.0
-    }
-    if (restitution == null) {
-      restitution = 0.5
-    }
-    if (friction == null) {
-      friction = 1.0
-    }
-    if (group_index == null) {
-      group_index = -2
-    }
-    bodyDef = new b2BodyDef()
+  create_lines(
+    block,
+    name,
+    density = 1.0,
+    restitution = 0.5,
+    friction = 1.0,
+    group_index = -2
+  ) {
+    // Create body
+    const bodyDef = new b2BodyDef()
+
+    // Assign body position
     bodyDef.position.x = block.position.x
     bodyDef.position.y = block.position.y
+
     bodyDef.userData = {
       name: name,
     }
+
     bodyDef.type = b2Body.b2_staticBody
-    body = this.world.CreateBody(bodyDef)
-    ref = block.vertices
-    results = []
-    for (i = j = 0, len = ref.length; j < len; i = ++j) {
-      vertex = ref[i]
-      fixDef = new b2FixtureDef()
+
+    // add body to the world
+    const body = this.world.CreateBody(bodyDef)
+
+    // assign each couple of vertices to a line
+    for (const [i, vertex] of block.vertices.entries()) {
+      // Create fixture
+      const fixDef = new b2FixtureDef()
+
       fixDef.shape = new b2PolygonShape()
       fixDef.density = density
       fixDef.restitution = restitution
       fixDef.friction = friction
       fixDef.filter.groupIndex = group_index
-      vertex1 = vertex
-      vertex2 =
+
+      // Create line (from polygon because box2Dweb cannot do otherwise)
+      const vertex1 = vertex
+      const vertex2 =
         i === block.vertices.length - 1
           ? block.vertices[0]
           : block.vertices[i + 1]
@@ -215,25 +218,21 @@ class Physics {
         [new b2Vec2(vertex1.x, vertex1.y), new b2Vec2(vertex2.x, vertex2.y)],
         2
       )
-      results.push(body.CreateFixture(fixDef))
+
+      // Assign fixture (line) to body
+      body.CreateFixture(fixDef)
     }
-    return results
   }
 
-  static create_shape(fix_def, shape, mirror?: boolean) {
-    var b2vertices, j, k, len, len1, vertex
-    if (mirror == null) {
-      mirror = false
-    }
-    b2vertices = []
+  static create_shape(fix_def, shape, mirror = false) {
+    const b2vertices = []
+
     if (mirror === false) {
-      for (j = 0, len = shape.length; j < len; j++) {
-        vertex = shape[j]
+      for (const vertex of shape) {
         b2vertices.push(new b2Vec2(vertex.x, vertex.y))
       }
     } else {
-      for (k = 0, len1 = shape.length; k < len1; k++) {
-        vertex = shape[k]
+      for (const vertex of shape) {
         b2vertices.unshift(new b2Vec2(-vertex.x, vertex.y))
       }
     }

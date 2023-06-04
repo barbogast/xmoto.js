@@ -28,15 +28,19 @@ class Infos {
     this.pack_name = xml_level.attr('levelpack')
     this.pack_id = xml_level.attr('levelpackNum')
     this.r_version = xml_level.attr('rversion')
+
     xml_infos = $(xml).find('level').find('info')
     this.name = xml_infos.find('name').text()
     this.description = xml_infos.find('description').text()
     this.author = xml_infos.find('author').text()
     this.date = xml_infos.find('date').text()
+
     xml_border = xml_infos.find('border')
     this.border = xml_border.attr('texture')
+
     xml_music = xml_infos.find('music')
     this.music = xml_music.attr('name')
+
     return this
   }
 }

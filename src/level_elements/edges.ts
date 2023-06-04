@@ -2,8 +2,24 @@ import * as Math2D from '../utils/math2d.js'
 import Constants from '../constants.js'
 import Level from '../level.js'
 import Assets from '../utils/assets.js'
-import Theme from '../utils/theme.js'
-import { Block } from './blocks.js'
+import Theme, { EdgeTheme } from '../utils/theme.js'
+import { Block, Vertex } from './blocks.js'
+import { Block2D, Pixi } from '../temporaryTypes.js'
+
+type Point = { x: number; y: number }
+type Vertices = [Point, Point, Point, Point]
+
+export type Edge = {
+  vertex1: Vertex
+  vertex2: Vertex
+  block: Block
+  texture: string
+  theme: EdgeTheme
+  angle: number
+  vertices: Vertices
+  aabb?: Block2D
+  sprite?: Pixi
+}
 
 var b2AABB
 // @ts-ignore
@@ -14,7 +30,8 @@ class Edges {
   block: Block
   assets: Assets
   theme: Theme
-  list: Block[]
+
+  list: Edge[] // List of edges
 
   constructor(level, block?) {
     this.level = level
@@ -25,105 +42,83 @@ class Edges {
   }
 
   parse() {
-    var edge, i, j, len, ref, results, vertex
-    ref = this.block.vertices
-    results = []
-    for (i = j = 0, len = ref.length; j < len; i = ++j) {
-      vertex = ref[i]
+    for (const [i, vertex] of this.block.vertices.entries())
       if (vertex.edge) {
-        edge = {
-          vertex1: vertex,
-          vertex2:
-            i === this.block.vertices.length - 1
-              ? this.block.vertices[0]
-              : this.block.vertices[i + 1],
-          block: this.block,
-          texture: vertex.edge,
-          theme: this.theme.edge_params(vertex.edge),
-        }
-        edge.angle =
-          Math2D.angle_between_points(edge.vertex1, edge.vertex2) - Math.PI / 2
-        edge.vertices = [
+        const vertex1 = vertex
+        const vertex2 =
+          i === this.block.vertices.length - 1
+            ? this.block.vertices[0]
+            : this.block.vertices[i + 1]
+        const theme = this.theme.edge_params(vertex.edge)
+
+        const vertices: Vertices = [
           {
-            x: edge.vertex1.absolute_x,
-            y: edge.vertex1.absolute_y - edge.theme.depth,
+            x: vertex1.absolute_x,
+            y: vertex1.absolute_y - theme.depth,
           },
           {
-            x: edge.vertex2.absolute_x,
-            y: edge.vertex2.absolute_y - edge.theme.depth,
+            x: vertex2.absolute_x,
+            y: vertex2.absolute_y - theme.depth,
           },
           {
-            x: edge.vertex2.absolute_x,
-            y: edge.vertex2.absolute_y,
+            x: vertex2.absolute_x,
+            y: vertex2.absolute_y,
           },
           {
-            x: edge.vertex1.absolute_x,
-            y: edge.vertex1.absolute_y,
+            x: vertex1.absolute_x,
+            y: vertex1.absolute_y,
           },
         ]
-        edge.aabb = this.compute_aabb(edge)
-        results.push(this.list.push(edge))
-      } else {
-        results.push(void 0)
+
+        const edge: Edge = {
+          vertex1,
+          vertex2,
+          block: this.block,
+          texture: vertex.edge,
+          theme,
+          angle: Math2D.angle_between_points(vertex1, vertex2) - Math.PI / 2,
+          vertices,
+          aabb: this.compute_aabb(vertices),
+        }
+
+        this.list.push(edge)
       }
-    }
-    return results
   }
 
   load_assets() {
-    var edge, j, len, ref, results
-    ref = this.list
-    results = []
-    for (j = 0, len = ref.length; j < len; j++) {
-      edge = ref[j]
-      results.push(this.assets.effects.push(edge.theme.file))
+    for (const edge of this.list) {
+      this.assets.effects.push(edge.theme.file)
     }
-    return results
   }
 
   init() {
-    return this.init_sprites()
+    this.init_sprites()
   }
 
   init_sprites() {
-    var edge,
-      j,
-      k,
-      len,
-      len1,
-      mask,
-      points,
-      ref,
-      ref1,
-      results,
-      size_x,
-      size_y,
-      texture,
-      vertex,
-      x,
-      y
-    ref = this.list
-    results = []
-    for (j = 0, len = ref.length; j < len; j++) {
-      edge = ref[j]
-      points = []
-      ref1 = edge.vertices
-      for (k = 0, len1 = ref1.length; k < len1; k++) {
-        vertex = ref1[k]
+    for (const edge of this.list) {
+      // Create mask
+      const points = []
+
+      for (const vertex of edge.vertices) {
         // @ts-ignore
         points.push(new PIXI.Point(vertex.x, -vertex.y))
       }
+
       // @ts-ignore
-      mask = new PIXI.Graphics()
+      const mask = new PIXI.Graphics()
       mask.beginFill(0xffffff, 1.0)
       mask.drawPolygon(points)
       this.level.camera.neutral_z_container.addChild(mask)
-      x = Math.abs(Math.sin(edge.angle) * edge.theme.depth)
-      y = Math.abs(Math.tan(edge.angle) * x)
+
+      const x = Math.abs(Math.sin(edge.angle) * edge.theme.depth)
+      const y = Math.abs(Math.tan(edge.angle) * x)
+
       // @ts-ignore
-      texture = PIXI.Texture.from(this.assets.get_url(edge.theme.file))
-      size_x = edge.aabb.upperBound.x - edge.aabb.lowerBound.x + 2 * x
-      size_y = edge.theme.depth
+      const texture = PIXI.Texture.from(this.assets.get_url(edge.theme.file))
+      const size_x = edge.aabb.upperBound.x - edge.aabb.lowerBound.x + 2 * x
+      const size_y = edge.theme.depth // + 2*y
+
       // @ts-ignore
       edge.sprite = new PIXI.TilingSprite(texture, 4 * size_x, size_y)
       edge.sprite.x = edge.vertex1.absolute_x - x
@@ -133,40 +128,34 @@ class Edges {
       if (edge.angle <= 0) {
         edge.sprite.y = -edge.vertex1.absolute_y - y
       }
+
       edge.sprite.pivot.x = 0.5
       edge.sprite.tileScale.x = 1.0 / 100.0
       edge.sprite.tileScale.y = 1.0 / 100.0
       edge.sprite.mask = mask
       edge.sprite.rotation = -edge.angle
-      results.push(this.level.camera.neutral_z_container.addChild(edge.sprite))
+
+      this.level.camera.neutral_z_container.addChild(edge.sprite)
     }
-    return results
   }
 
+  // only display edges present on the screen zone
   update() {
-    var block_visible, edge, j, len, ref, results
     if (!Constants.debug_physics) {
-      block_visible = this.block.sprite.visible
-      ref = this.list
-      results = []
-      for (j = 0, len = ref.length; j < len; j++) {
-        edge = ref[j]
-        results.push(
-          (edge.sprite.visible = block_visible && this.visible(edge))
-        )
+      const block_visible = this.block.sprite.visible
+
+      for (const edge of this.list) {
+        edge.sprite.visible = block_visible && this.visible(edge) // don't test aabb if block not visible
       }
-      return results
     }
   }
 
-  compute_aabb(edge) {
-    var aabb, first, j, len, lower_bound, ref, upper_bound, vertex
-    first = true
-    lower_bound = {}
-    upper_bound = {}
-    ref = edge.vertices
-    for (j = 0, len = ref.length; j < len; j++) {
-      vertex = ref[j]
+  compute_aabb(vertices: Vertices) {
+    let first = true
+    let lower_bound: { x?: number; y?: number } = {}
+    let upper_bound: { x?: number; y?: number } = {}
+
+    for (const vertex of vertices) {
       if (first) {
         lower_bound = {
           x: vertex.x,
@@ -192,7 +181,8 @@ class Edges {
         }
       }
     }
-    aabb = new b2AABB()
+
+    const aabb = new b2AABB()
     aabb.lowerBound.Set(lower_bound.x, lower_bound.y)
     aabb.upperBound.Set(upper_bound.x, upper_bound.y)
     return aabb

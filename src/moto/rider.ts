@@ -80,45 +80,42 @@ class Rider {
     this.world.DestroyBody(this.upper_leg)
     this.world.DestroyBody(this.lower_arm)
     this.world.DestroyBody(this.upper_arm)
+
     this.level.camera.neutral_z_container.removeChild(this.head_sprite)
     this.level.camera.neutral_z_container.removeChild(this.torso_sprite)
     this.level.camera.neutral_z_container.removeChild(this.lower_leg_sprite)
     this.level.camera.neutral_z_container.removeChild(this.upper_leg_sprite)
     this.level.camera.neutral_z_container.removeChild(this.lower_arm_sprite)
-    return this.level.camera.neutral_z_container.removeChild(
-      this.upper_arm_sprite
-    )
+    this.level.camera.neutral_z_container.removeChild(this.upper_arm_sprite)
   }
 
   load_assets() {
-    var i, len, part, parts, results
-    parts = [
+    const parts = [
       Constants.torso,
       Constants.upper_leg,
       Constants.lower_leg,
       Constants.upper_arm,
       Constants.lower_arm,
     ]
-    results = []
-    for (i = 0, len = parts.length; i < len; i++) {
-      part = parts[i]
+    for (const part of parts) {
       if (this.ghost) {
-        results.push(this.assets.moto.push(part.ghost_texture))
+        this.assets.moto.push(part.ghost_texture)
       } else {
-        results.push(this.assets.moto.push(part.texture))
+        this.assets.moto.push(part.texture)
       }
     }
-    return results
   }
 
   init_physics_parts() {
     this.player_start = this.level.entities.player_start
+
     this.head = this.create_head()
     this.torso = this.create_part(Constants.torso, 'torso')
     this.lower_leg = this.create_part(Constants.lower_leg, 'lower_leg')
     this.upper_leg = this.create_part(Constants.upper_leg, 'upper_leg')
     this.lower_arm = this.create_part(Constants.lower_arm, 'lower_arm')
     this.upper_arm = this.create_part(Constants.upper_arm, 'upper_arm')
+
     this.neck_joint = this.create_neck_joint()
     this.ankle_joint = this.create_joint(
       Constants.ankle,
@@ -155,25 +152,21 @@ class Rider {
   }
 
   init_sprites() {
-    var asset_name, i, len, part, ref, results
-    ref = ['torso', 'upper_leg', 'lower_leg', 'upper_arm', 'lower_arm']
-    results = []
-    for (i = 0, len = ref.length; i < len; i++) {
-      part = ref[i]
+    const parts = ['torso', 'upper_leg', 'lower_leg', 'upper_arm', 'lower_arm']
+    for (const part of parts) {
+      let asset_name
       if (this.ghost) {
         asset_name = Constants[part].ghost_texture
       } else {
         asset_name = Constants[part].texture
       }
+
       // @ts-ignore
       this[part + '_sprite'] = new PIXI.Sprite.from(
         this.assets.get_url(asset_name)
       )
-      results.push(
-        this.level.camera.neutral_z_container.addChild(this[part + '_sprite'])
-      )
+      this.level.camera.neutral_z_container.addChild(this[part + '_sprite'])
     }
-    return results
   }
 
   position() {
@@ -181,74 +174,93 @@ class Rider {
   }
 
   eject() {
-    var adjusted_force_vector, eject_angle, force_vector
     if (!this.moto.dead) {
       this.level.listeners.kill_moto(this.moto)
-      force_vector = {
-        x: 150.0 * this.moto.mirror,
-        y: 0,
-      }
-      eject_angle = this.mirror * this.moto.body.GetAngle() + Math.PI / 4.0
-      adjusted_force_vector = Math2D.rotate_point(force_vector, eject_angle, {
-        x: 0,
-        y: 0,
-      })
-      return this.torso.ApplyForce(
-        adjusted_force_vector,
-        this.torso.GetWorldCenter()
+
+      const force_vector = { x: 150.0 * this.moto.mirror, y: 0 }
+      const eject_angle =
+        this.mirror * this.moto.body.GetAngle() + Math.PI / 4.0
+      const adjusted_force_vector = Math2D.rotate_point(
+        force_vector,
+        eject_angle,
+        { x: 0, y: 0 }
       )
+      this.torso.ApplyForce(adjusted_force_vector, this.torso.GetWorldCenter())
     }
   }
 
   create_head() {
-    var body, bodyDef, fixDef
-    fixDef = new b2FixtureDef()
+    // Create fixture
+    const fixDef = new b2FixtureDef()
+
     fixDef.shape = new b2CircleShape(Constants.head.radius)
     fixDef.density = Constants.head.density
     fixDef.restitution = Constants.head.restitution
     fixDef.friction = Constants.head.friction
     fixDef.isSensor = !Constants.head.collisions
     fixDef.filter.groupIndex = -1
-    bodyDef = new b2BodyDef()
+
+    // Create body
+    const bodyDef = new b2BodyDef()
+
+    // Assign body position
     bodyDef.position.x =
       this.player_start.x + this.mirror * Constants.head.position.x
     bodyDef.position.y = this.player_start.y + Constants.head.position.y
+
     bodyDef.userData = {
       name: 'rider',
       type: this.ghost ? 'ghost' : 'player',
       part: 'head',
       rider: this,
     }
+
     bodyDef.type = b2Body.b2_dynamicBody
-    body = this.world.CreateBody(bodyDef)
+
+    // Assign fixture to body and add body to 2D world
+    const body = this.world.CreateBody(bodyDef)
     body.CreateFixture(fixDef)
+
     return body
   }
 
   create_part(part_constants, name) {
-    var body, bodyDef, fixDef
-    fixDef = new b2FixtureDef()
+    // Create fixture
+    const fixDef = new b2FixtureDef()
+
     fixDef.shape = new b2PolygonShape()
     fixDef.density = part_constants.density
     fixDef.restitution = part_constants.restitution
     fixDef.friction = part_constants.friction
     fixDef.isSensor = !part_constants.collisions
     fixDef.filter.groupIndex = -1
+
     Physics.create_shape(fixDef, part_constants.shape, this.mirror === -1)
-    bodyDef = new b2BodyDef()
+
+    // Create body
+    const bodyDef = new b2BodyDef()
+
+    // Assign body position
     bodyDef.position.x =
       this.player_start.x + this.mirror * part_constants.position.x
     bodyDef.position.y = this.player_start.y + part_constants.position.y
+
+    // Assign body angle
     bodyDef.angle = this.mirror * part_constants.angle
+
     bodyDef.userData = {
       name: 'rider',
       type: this.ghost ? 'ghost' : 'player',
       part: name,
       rider: this,
     }
+
     bodyDef.type = b2Body.b2_dynamicBody
-    body = this.world.CreateBody(bodyDef)
+
+    // Assign fixture to body and add body to 2D world
+    const body = this.world.CreateBody(bodyDef)
     body.CreateFixture(fixDef)
+
     return body
   }
 
@@ -260,32 +272,29 @@ class Rider {
       joint.lowerAngle = -Math.PI / 108
       joint.upperAngle = Math.PI / 15
     }
-    return (joint.enableLimit = true)
+    joint.enableLimit = true
   }
 
   create_neck_joint() {
-    var axe, jointDef, position
-    position = this.head.GetWorldCenter()
-    axe = {
+    const position = this.head.GetWorldCenter()
+    const axe = {
       x: position.x,
       y: position.y,
     }
-    jointDef = new b2RevoluteJointDef()
+
+    const jointDef = new b2RevoluteJointDef()
     jointDef.Initialize(this.head, this.torso, axe)
     return this.world.CreateJoint(jointDef)
   }
 
-  create_joint(joint_constants, part1, part2, invert_joint?) {
-    var axe, jointDef, position
-    if (invert_joint == null) {
-      invert_joint = false
-    }
-    position = part1.GetWorldCenter()
-    axe = {
+  create_joint(joint_constants, part1, part2, invert_joint = false) {
+    const position = part1.GetWorldCenter()
+    const axe = {
       x: position.x + this.mirror * joint_constants.axe_position.x,
       y: position.y + joint_constants.axe_position.y,
     }
-    jointDef = new b2RevoluteJointDef()
+
+    const jointDef = new b2RevoluteJointDef()
     if (invert_joint) {
       jointDef.Initialize(part2, part1, axe)
     } else {
@@ -301,21 +310,23 @@ class Rider {
       this.update_part(this.upper_leg, 'upper_leg', visible)
       this.update_part(this.lower_leg, 'lower_leg', visible)
       this.update_part(this.upper_arm, 'upper_arm', visible)
-      return this.update_part(this.lower_arm, 'lower_arm', visible)
+      this.update_part(this.lower_arm, 'lower_arm', visible)
     }
   }
 
   update_part(part, name, visible) {
-    var angle, part_constants, position, sprite, texture
-    sprite = this[name + '_sprite']
+    const sprite = this[name + '_sprite']
     sprite.visible = visible
+
     if (visible) {
-      part_constants = Constants[name]
-      position = part.GetPosition()
-      angle = part.GetAngle()
-      texture = this.ghost
+      const part_constants = Constants[name]
+
+      const position = part.GetPosition()
+      const angle = part.GetAngle()
+      const texture = this.ghost
         ? part_constants.ghost_texture
         : part_constants.texture
+
       sprite.width = part_constants.texture_size.x
       sprite.height = part_constants.texture_size.y
       sprite.anchor.x = 0.5
@@ -323,7 +334,7 @@ class Rider {
       sprite.x = position.x
       sprite.y = -position.y
       sprite.rotation = -angle
-      return (sprite.scale.x = this.mirror * Math.abs(sprite.scale.x))
+      sprite.scale.x = this.mirror * Math.abs(sprite.scale.x)
     }
   }
 }

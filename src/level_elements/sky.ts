@@ -29,8 +29,7 @@ class Sky {
   }
 
   parse(xml) {
-    var xml_sky
-    xml_sky = $(xml).find('level info sky')
+    const xml_sky = $(xml).find('level info sky')
     this.name = xml_sky.text().toLowerCase()
     this.color_r = parseInt(xml_sky.attr('color_r'))
     this.color_g = parseInt(xml_sky.attr('color_g'))
@@ -38,26 +37,26 @@ class Sky {
     this.color_a = parseInt(xml_sky.attr('color_a'))
     this.zoom = parseFloat(xml_sky.attr('zoom'))
     this.offset = parseFloat(xml_sky.attr('offset'))
+
     if (this.name === '') {
       this.name = 'sky1'
     }
-
     this.filename = this.theme.texture_params(this.name).file
+
     return this
   }
 
   load_assets() {
-    return this.assets.textures.push(this.filename)
+    this.assets.textures.push(this.filename)
   }
 
   init() {
-    return this.init_sprites()
+    this.init_sprites()
   }
 
   init_sprites() {
-    var texture
     // @ts-ignore
-    texture = PIXI.Texture.from(this.assets.get_url(this.filename))
+    const texture = PIXI.Texture.from(this.assets.get_url(this.filename))
     // @ts-ignore
     this.sprite = new PIXI.TilingSprite(
       texture,
@@ -66,12 +65,12 @@ class Sky {
     )
     this.sprite.position.x = 0
     this.sprite.position.y = 0
-    return this.level.stage.addChildAt(this.sprite, 0)
+    this.level.stage.addChildAt(this.sprite, 0)
   }
 
   update() {
-    var ctx, position_factor_x, position_factor_y
-    ctx = this.level.debug_ctx
+    const ctx = this.level.debug_ctx
+
     if (Constants.debug_physics) {
       ctx.beginPath()
       ctx.moveTo(this.options.width, this.options.height)
@@ -79,17 +78,20 @@ class Sky {
       ctx.lineTo(0, 0)
       ctx.lineTo(this.options.width, 0)
       ctx.closePath()
+
       ctx.fillStyle = '#222228'
-      return ctx.fill()
+      ctx.fill()
     } else {
       this.sprite.tileScale.x = 4
       this.sprite.tileScale.y = 4
-      position_factor_x = 15
-      position_factor_y = 7
+
+      const position_factor_x = 15
+      const position_factor_y = 7
+
       this.sprite.tilePosition.x =
         -this.level.camera.target().x * position_factor_x
-      return (this.sprite.tilePosition.y =
-        this.level.camera.target().y * position_factor_y)
+      this.sprite.tilePosition.y =
+        this.level.camera.target().y * position_factor_y
     }
   }
 }

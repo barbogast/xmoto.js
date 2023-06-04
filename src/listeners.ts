@@ -23,72 +23,86 @@ class Listeners {
   }
 
   init() {
-    var listener
+    // Add listeners for end of level
     // @ts-ignore
-    listener = new Box2D.Dynamics.b2ContactListener()
-    listener.BeginContact = (function (_this) {
-      return function (contact) {
-        var a, b, entity, moto, strawberry
-        moto = _this.active_moto()
-        a = contact.GetFixtureA().GetBody().GetUserData()
-        b = contact.GetFixtureB().GetBody().GetUserData()
-        if (!moto.dead) {
-          if (Listeners.does_contact_moto_rider(a, b, 'strawberry')) {
-            strawberry =
-              a.name === 'strawberry'
-                ? contact.GetFixtureA()
-                : contact.GetFixtureB()
-            entity = strawberry.GetBody().GetUserData().entity
-            if (entity.display) {
-              return (entity.display = false)
-            }
-          } else if (
-            Listeners.does_contact_moto_rider(a, b, 'end_of_level') &&
-            !_this.level.need_to_restart
-          ) {
-            if (_this.level.got_strawberries()) {
-              if (a.name === 'rider' || b.name === 'rider') {
-                moto = a.name === 'rider' ? a.rider.moto : b.rider.moto
-              } else {
-                moto = a.name === 'moto' ? a.moto : b.moto
-              }
-              return _this.trigger_restart(moto)
-            }
-          } else if (
-            Constants.hooking === false &&
-            Listeners.does_contact(a, b, 'rider', 'ground') &&
-            a.part !== 'lower_leg' &&
-            b.part !== 'lower_leg'
-          ) {
-            moto = a.name === 'rider' ? a.rider.moto : b.rider.moto
-            return _this.kill_moto(moto)
-          } else if (
-            Constants.hooking === true &&
-            Listeners.does_contact(a, b, 'rider', 'ground') &&
-            (a.part === 'head' || b.part === 'head')
-          ) {
-            moto = a.name === 'rider' ? a.rider.moto : b.rider.moto
-            return _this.kill_moto(moto)
-          } else if (Listeners.does_contact_moto_rider(a, b, 'wrecker')) {
+    const listener = new Box2D.Dynamics.b2ContactListener()
+
+    listener.BeginContact = (contact) => {
+      const moto = this.active_moto()
+
+      const a = contact.GetFixtureA().GetBody().GetUserData()
+      const b = contact.GetFixtureB().GetBody().GetUserData()
+
+      if (!moto.dead) {
+        // Strawberries
+        if (Listeners.does_contact_moto_rider(a, b, 'strawberry')) {
+          const strawberry =
+            a.name === 'strawberry'
+              ? contact.GetFixtureA()
+              : contact.GetFixtureB()
+
+          const entity = strawberry.GetBody().GetUserData().entity
+          if (entity.display) {
+            return (entity.display = false)
+            // createjs.Sound.play('PickUpStrawberry')
+          }
+
+          // End of level
+        } else if (
+          Listeners.does_contact_moto_rider(a, b, 'end_of_level') &&
+          !this.level.need_to_restart
+        ) {
+          if (this.level.got_strawberries()) {
+            let moto
             if (a.name === 'rider' || b.name === 'rider') {
               moto = a.name === 'rider' ? a.rider.moto : b.rider.moto
             } else {
               moto = a.name === 'moto' ? a.moto : b.moto
             }
-            return _this.kill_moto(moto)
+
+            this.trigger_restart(moto)
           }
+
+          //  Fall of rider
+        } else if (
+          Constants.hooking === false &&
+          Listeners.does_contact(a, b, 'rider', 'ground') &&
+          a.part !== 'lower_leg' &&
+          b.part !== 'lower_leg'
+        ) {
+          const moto = a.name === 'rider' ? a.rider.moto : b.rider.moto
+          return this.kill_moto(moto)
+
+          // Ground
+        } else if (
+          Constants.hooking === true &&
+          Listeners.does_contact(a, b, 'rider', 'ground') &&
+          (a.part === 'head' || b.part === 'head')
+        ) {
+          const moto = a.name === 'rider' ? a.rider.moto : b.rider.moto
+          this.kill_moto(moto)
+
+          // Wrecker contact
+        } else if (Listeners.does_contact_moto_rider(a, b, 'wrecker')) {
+          let moto
+          if (a.name === 'rider' || b.name === 'rider') {
+            moto = a.name === 'rider' ? a.rider.moto : b.rider.moto
+          } else {
+            moto = a.name === 'moto' ? a.moto : b.moto
+          }
+          this.kill_moto(moto)
         }
       }
-    })(this)
-    return this.world.SetContactListener(listener)
+    }
+
+    this.world.SetContactListener(listener)
   }
 
   static does_contact_moto_rider(a, b, obj) {
-    var collision, player
-    collision =
+    const collision =
       Listeners.does_contact(a, b, obj, 'rider') ||
       Listeners.does_contact(a, b, obj, 'moto')
-    player = a.type === 'player' || b.type === 'player'
+    const player = a.type === 'player' || b.type === 'player'
     return collision && player
   }
 
@@ -100,26 +114,40 @@ class Listeners {
   }
 
   trigger_restart(moto) {
+    // createjs.Sound.play('EndOfLevel')
     if (moto.ghost) {
-      return (moto.dead = true)
+      moto.dead = true
     } else {
       this.level.replay.success = true
-      return (this.level.need_to_restart = true)
+      this.level.need_to_restart = true
     }
   }
 
   kill_moto(moto) {
     if (!moto.dead) {
       moto.dead = true
+
+      // Cause the game to "hard" crash because reactivation of collisions when in the middle of it
+      // this.level.moto.rider.torso.GetFixtureList().SetSensor(false)
+      // this.level.moto.rider.lower_leg.GetFixtureList().SetSensor(false)
+      // this.level.moto.rider.upper_leg.GetFixtureList().SetSensor(false)
+      // this.level.moto.rider.lower_arm.GetFixtureList().SetSensor(false)
+      // this.level.moto.rider.upper_arm.GetFixtureList().SetSensor(false)
+      // this.level.moto.body.GetFixtureList().SetSensor(false)
+      // this.level.moto.left_axle.GetFixtureList().SetSensor(false)
+      // this.level.moto.right_axle.GetFixtureList().SetSensor(false)
+
+      // createjs.Sound.play('Headcrash')
+
       this.world.DestroyJoint(moto.rider.ankle_joint)
       this.world.DestroyJoint(moto.rider.wrist_joint)
       moto.rider.shoulder_joint.m_enableLimit = false
+
       moto.rider.knee_joint.m_lowerAngle =
         moto.rider.knee_joint.m_lowerAngle * 3
       moto.rider.elbow_joint.m_upperAngle =
         moto.rider.elbow_joint.m_upperAngle * 3
-      return (moto.rider.hip_joint.m_lowerAngle =
-        moto.rider.hip_joint.m_lowerAngle * 3)
+      moto.rider.hip_joint.m_lowerAngle = moto.rider.hip_joint.m_lowerAngle * 3
     }
   }
 }

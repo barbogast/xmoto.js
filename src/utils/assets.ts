@@ -2,99 +2,77 @@ import $ from 'jquery'
 
 import Theme from './theme.js'
 
+type Item = { id: string; src: string }
+
 class Assets {
   theme: Theme
-  textures: any[]
-  anims: any[]
-  effects: any[]
-  moto: any[]
-  sounds: any[]
+  textures: string[]
+  anims: string[]
+  effects: string[]
+  moto: string[]
+  sounds: string[]
   resources: {}
 
   constructor() {
     this.theme = new Theme('', () => {})
-    this.textures = []
-    this.anims = []
-    this.effects = []
-    this.moto = []
-    this.sounds = []
+
+    this.textures = [] // texture list
+    this.anims = [] // anim list
+    this.effects = [] // effect list (edge etc.)
+    this.moto = [] //  moto list
+    this.sounds = [] //  Sounds
+
     this.resources = {}
   }
 
   parse_theme(filename, callback) {
+    // extend to keep the same pointer to @theme that is already in other objects
     Object.assign(this.theme, new Theme('modern.xml', callback))
   }
 
   load(callback) {
-    var i,
-      item,
-      items,
-      j,
-      k,
-      l,
-      len,
-      len1,
-      len2,
-      len3,
-      len4,
-      m,
-      ref,
-      ref1,
-      ref2,
-      ref3,
-      ref4
     // @ts-ignore
     PIXI.Loader.shared.reset()
-    items = []
-    ref = this.textures
-    for (i = 0, len = ref.length; i < len; i++) {
-      item = ref[i]
+
+    const items: Item[] = []
+    for (const item of this.textures) {
       items.push({
         id: item,
         src: '/data/Textures/Textures/' + item.toLowerCase(),
       })
     }
-    ref1 = this.anims
-    for (j = 0, len1 = ref1.length; j < len1; j++) {
-      item = ref1[j]
+    for (const item of this.anims) {
       items.push({
         id: item,
         src: '/data/Textures/Anims/' + item.toLowerCase(),
       })
     }
-    ref2 = this.effects
-    for (k = 0, len2 = ref2.length; k < len2; k++) {
-      item = ref2[k]
+    for (const item of this.effects) {
       items.push({
         id: item,
         src: '/data/Textures/Effects/' + item.toLowerCase(),
       })
     }
-    ref3 = this.moto
-    for (l = 0, len3 = ref3.length; l < len3; l++) {
-      item = ref3[l]
+    for (const item of this.moto) {
       items.push({
         id: item,
         src: '/data/Textures/Riders/' + item.toLowerCase() + '.png',
       })
     }
-    ref4 = this.remove_duplicate_textures(items)
-    for (m = 0, len4 = ref4.length; m < len4; m++) {
-      item = ref4[m]
+
+    for (const item of this.remove_duplicate_textures(items)) {
       // @ts-ignore
       PIXI.Loader.shared.add(item.id, item.src)
     }
+
     // @ts-ignore
-    return PIXI.Loader.shared.load(
-      (function (_this) {
-        return function (loader, resources) {
-          _this.resources = resources
-          return callback()
-        }
-      })(this)
-    )
+    PIXI.Loader.shared.load((loader, resources) => {
+      this.resources = resources
+      callback()
+    })
   }
 
+  // Get an asset by its name ("id")
   get(name) {
     return this.resources[name].data
   }
@@ -103,14 +81,11 @@ class Assets {
     return this.resources[name].url
   }
 
-  remove_duplicate_textures(array) {
-    var found, i, image, j, len, len1, unique, unique_image
-    unique = []
-    for (i = 0, len = array.length; i < len; i++) {
-      image = array[i]
-      found = false
-      for (j = 0, len1 = unique.length; j < len1; j++) {
-        unique_image = unique[j]
+  remove_duplicate_textures(array: Item[]) {
+    const unique = []
+    for (const image of array) {
+      let found = false
+      for (const unique_image of unique) {
         if (image.id === unique_image.id) {
           found = true
         }

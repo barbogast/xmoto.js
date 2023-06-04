@@ -24,19 +24,29 @@ export type Sprite = {
   delay: number
 }
 
+export type EdgeTheme = {
+  file: string
+  scale: number
+  depth: number
+}
+
 class Theme {
   filename: string
   callback: () => {}
-  sprites: any[]
-  edges: any[]
+  sprites: Sprite[]
+  edges: {
+    [key: string]: EdgeTheme
+  }
   textures: Texture[]
 
   constructor(filename, callback) {
     this.filename = filename
     this.callback = callback
+
     this.sprites = []
-    this.edges = []
+    this.edges = {}
     this.textures = []
+
     $.ajax({
       type: 'GET',
       url: '/data/Themes/' + filename,
@@ -47,10 +57,8 @@ class Theme {
   }
 
   load_theme(xml) {
-    var i, len, xml_sprite, xml_sprites
-    xml_sprites = $(xml).find('sprite')
-    for (i = 0, len = xml_sprites.length; i < len; i++) {
-      xml_sprite = xml_sprites[i]
+    const xml_sprites = $(xml).find('sprite')
+    for (const xml_sprite of xml_sprites) {
       if ($(xml_sprite).attr('type') === 'Entity') {
         this.sprites[$(xml_sprite).attr('name')] = {
           file: $(xml_sprite).attr('file'),
@@ -85,7 +93,8 @@ class Theme {
         }
       }
     }
-    return this.callback()
+
+    this.callback()
   }
 
   sprite_params(name) {

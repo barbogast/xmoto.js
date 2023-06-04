@@ -23,95 +23,91 @@ class Input {
 
   init() {
     this.disable_scroll()
-    return this.init_keyboard()
+    this.init_keyboard()
   }
 
   disable_scroll() {
-    var keydown, keys, preventDefault
-    keys = [37, 38, 39, 40, 32]
-    preventDefault = function (e) {
+    // Disable up, down, left, right to scroll
+    // left: 37, up: 38, right: 39, down: 40, spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36
+    const keys = [37, 38, 39, 40, 32]
+    const preventDefault = function (e) {
       e = e || window.event
       if (e.preventDefault) {
-        return e.preventDefault()
+        e.preventDefault()
       } else {
-        return (e.returnValue = false)
+        e.returnValue = false
       }
     }
-    keydown = function (e) {
-      var i, j, len
-      for (j = 0, len = keys.length; j < len; j++) {
-        i = keys[j]
+    const keydown = function (e) {
+      for (const i of keys) {
         if (e.keyCode === i) {
           preventDefault(e)
           return
         }
       }
     }
-    return (document.onkeydown = keydown)
+    document.onkeydown = keydown
   }
 
   init_keyboard() {
     $(document).off('keydown')
-    $(document).on(
-      'keydown',
-      (function (_this) {
-        return function (event) {
-          var url
-          switch (event.which || event.keyCode) {
-            case 38:
-              return (_this.up = true)
-            case 40:
-              return (_this.down = true)
-            case 37:
-              return (_this.left = true)
-            case 39:
-              return (_this.right = true)
-            case 32:
-              return (_this.space = true)
-            case 13:
-              return (_this.level.need_to_restart = true)
-            case 69:
-              if (!$('input').is(':focus')) {
-                return _this.level.moto.rider.eject()
-              }
-              break
-            case 67:
-              url = document.URL
-              url =
-                url.substr(url.length - 1) !== '/'
-                  ? url + '/capture'
-                  : url + 'capture'
-              return $.post(url, {
-                steps: _this.level.physics.steps,
-                image: $(_this.level.options.canvas)[0].toDataURL(),
-              })
-                .done(function () {
-                  return alert('Capture uploaded')
-                })
-                .fail(function () {
-                  return alert('Capture failed')
-                })
+    $(document).on('keydown', (event) => {
+      switch (event.which || event.keyCode) {
+        case 38:
+          this.up = true
+          break
+        case 40:
+          this.down = true
+          break
+        case 37:
+          this.left = true
+          break
+        case 39:
+          this.right = true
+          break
+        case 32:
+          this.space = true
+          break
+        case 13:
+          this.level.need_to_restart = true
+          break
+        case 69: // e
+          if (!$('input').is(':focus')) {
+            this.level.moto.rider.eject()
           }
-        }
-      })(this)
-    )
-    return $(document).on(
-      'keyup',
-      (function (_this) {
-        return function (event) {
-          switch (event.which || event.keyCode) {
-            case 38:
-              return (_this.up = false)
-            case 40:
-              return (_this.down = false)
-            case 37:
-              return (_this.left = false)
-            case 39:
-              return (_this.right = false)
-          }
-        }
-      })(this)
-    )
+          break
+        case 67: // c
+          let url = document.URL
+          url =
+            url.substr(url.length - 1) !== '/'
+              ? url + '/capture'
+              : url + 'capture'
+
+          $.post(url, {
+            steps: this.level.physics.steps,
+            image: $(this.level.options.canvas)[0].toDataURL(),
+          })
+            .done(() => alert('Capture uploaded'))
+            .fail(() => alert('Capture failed'))
+      }
+    })
+
+    return $(document).on('keyup', (event) => {
+      switch (event.which || event.keyCode) {
+        case 38:
+          this.up = false
+          break
+        case 40:
+          this.down = false
+          break
+        case 37:
+          this.left = false
+          break
+        case 39:
+          this.right = false
+          break
+      }
+    })
   }
 }
 

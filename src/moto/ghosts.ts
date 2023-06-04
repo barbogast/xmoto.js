@@ -15,13 +15,14 @@ class Ghosts {
     this.level = level
     this.assets = level.assets
     this.options = level.options
+
     this.others = []
     this.load_replays()
   }
 
   load_assets() {
-    var i, len, part, parts, results
-    parts = [
+    // Assets
+    const parts = [
       Constants.torso,
       Constants.upper_leg,
       Constants.lower_leg,
@@ -33,18 +34,14 @@ class Ghosts {
       Constants.left_axle,
       Constants.right_axle,
     ]
-    results = []
-    for (i = 0, len = parts.length; i < len; i++) {
-      part = parts[i]
-      results.push(this.assets.moto.push(part.ghost_texture))
+
+    for (const part of parts) {
+      this.assets.moto.push(part.ghost_texture)
     }
-    return results
   }
 
   all_ghosts() {
-    var ghosts
-    ghosts = []
-    ghosts = ghosts.concat(this.others)
+    const ghosts = [].concat(this.others)
     if (this.player) {
       ghosts.push(this.player)
     }
@@ -52,81 +49,43 @@ class Ghosts {
   }
 
   init() {
-    var ghost, i, len, ref, results
-    ref = this.all_ghosts()
-    results = []
-    for (i = 0, len = ref.length; i < len; i++) {
-      ghost = ref[i]
+    for (const ghost of this.all_ghosts())
       if (ghost.replay) {
-        results.push(ghost.init())
-      } else {
-        results.push(void 0)
+        ghost.init()
       }
-    }
-    return results
   }
 
   reload() {
-    var ghost, i, len, ref, results
-    ref = this.all_ghosts()
-    results = []
-    for (i = 0, len = ref.length; i < len; i++) {
-      ghost = ref[i]
+    for (const ghost of this.all_ghosts())
       if (ghost.replay) {
-        results.push(ghost.reload())
-      } else {
-        results.push(void 0)
+        ghost.reload()
       }
-    }
-    return results
   }
 
   move() {
-    var ghost, i, len, ref, results
-    ref = this.all_ghosts()
-    results = []
-    for (i = 0, len = ref.length; i < len; i++) {
-      ghost = ref[i]
+    for (const ghost of this.all_ghosts())
       if (ghost.replay) {
-        results.push(ghost.move())
-      } else {
-        results.push(void 0)
+        ghost.move()
       }
-    }
-    return results
   }
 
   update() {
-    var ghost, i, len, ref, results
-    ref = this.all_ghosts()
-    results = []
-    for (i = 0, len = ref.length; i < len; i++) {
-      ghost = ref[i]
+    for (const ghost of this.all_ghosts())
       if (ghost.replay) {
-        results.push(ghost.update())
-      } else {
-        results.push(void 0)
+        ghost.update()
       }
-    }
-    return results
   }
 
   load_replays() {
-    var i, len, option_replay, ref, replay, results
-    ref = this.options.replays
-    results = []
-    for (i = 0, len = ref.length; i < len; i++) {
-      option_replay = ref[i]
-      replay = new Replay(this.level)
+    for (const option_replay of this.options.replays) {
+      const replay = new Replay(this.level)
       replay.load(option_replay.replay)
       if (!this.options.playable && option_replay.follow) {
-        results.push((this.player = new Ghost(this.level, replay, false)))
+        this.player = new Ghost(this.level, replay, false)
       } else {
-        results.push(this.others.push(new Ghost(this.level, replay)))
+        this.others.push(new Ghost(this.level, replay))
       }
     }
-
-    return results
   }
 }
 

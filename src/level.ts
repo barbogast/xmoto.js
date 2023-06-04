@@ -65,11 +65,15 @@ class Level {
   constructor(renderer, options) {
     this.renderer = renderer
     this.options = options
+
+    // Context
     this.debug_ctx = ($('#xmoto-debug').get(0) as HTMLCanvasElement).getContext(
       '2d'
     )
     // @ts-ignore
     this.stage = new PIXI.Container()
+
+    // Level independant objects
     this.assets = new Assets()
     this.camera = new Camera(this)
     this.physics = new Physics(this)
@@ -77,6 +81,8 @@ class Level {
     this.listeners = new Listeners(this)
     this.moto = new Moto(this)
     this.particles = new Particles(this)
+
+    // Level dependent objects
     this.infos = new Infos(this)
     this.sky = new Sky(this)
     this.blocks = new Blocks(this)
@@ -84,26 +90,23 @@ class Level {
     this.layer_offsets = new LayerOffsets(this)
     this.script = new Script(this)
     this.entities = new Entities(this)
+
+    // Replay: actual run of the player (not saved yet)
     this.replay = new Replay(this)
+
+    // Ghosts: previous saved run of various players (included himself)
     this.ghosts = new Ghosts(this)
   }
 
   load_from_file(filename, callback) {
-    return this.assets.parse_theme(
-      'modern.xml',
-      (function (_this) {
-        return function () {
-          return $.ajax({
-            type: 'GET',
-            url: _this.options.levels_path + '/' + filename,
-            dataType: 'xml',
-            success: function (xml) {
-              return this.load_level(xml, callback)
-            },
-            context: _this,
-          })
-        }
-      })(this)
+    this.assets.parse_theme('modern.xml', () =>
+      $.ajax({
+        type: 'GET',
+        url: this.options.levels_path + '/' + filename,
+        dataType: 'xml',
+        success: (xml) => this.load_level(xml, callback),
+        context: this,
+      })
     )
   }
 
@@ -115,13 +118,15 @@ class Level {
     this.layer_offsets.parse(xml)
     this.script.parse(xml)
     this.entities.parse(xml)
+
     this.sky.load_assets()
     this.blocks.load_assets()
     this.limits.load_assets()
     this.entities.load_assets()
     this.moto.load_assets()
     this.ghosts.load_assets()
-    return this.assets.load(callback)
+
+    this.assets.load(callback)
   }
 
   init() {
@@ -135,17 +140,20 @@ class Level {
     this.input.init()
     this.camera.init()
     this.listeners.init()
-    return this.init_timer()
+
+    this.init_timer()
   }
 
   update() {
-    var dead_player, dead_replay
     this.physics.update()
-    dead_player = this.options.playable && !this.moto.dead
-    dead_replay = !this.options.playable && !this.ghosts.player.moto.dead
+
+    const dead_player = this.options.playable && !this.moto.dead
+    const dead_replay = !this.options.playable && !this.ghosts.player.moto.dead
+
     if (dead_player || dead_replay) {
       this.update_timer()
     }
+
     this.sky.update()
     this.limits.update()
     this.entities.update()
@@ -155,43 +163,35 @@ class Level {
       this.moto.update()
     }
     this.ghosts.update()
-    return this.particles.update()
+    this.particles.update()
   }
 
   init_timer() {
     this.start_time = new Date().getTime()
-    return (this.current_time = 0)
+    this.current_time = 0
   }
 
-  update_timer(update_now?) {
-    var cents, minutes, new_time, seconds
-    if (update_now == null) {
-      update_now = false
-    }
-    new_time = new Date().getTime() - this.start_time
+  update_timer(update_now = false) {
+    const new_time = new Date().getTime() - this.start_time
     if (
       update_now ||
       Math.floor(new_time / 10) > Math.floor(this.current_time / 10)
     ) {
-      minutes = Math.floor(new_time / 1000 / 60)
-      seconds = Math.floor(new_time / 1000) % 60
-      if (seconds < 10) {
-        seconds = '0' + seconds
-      }
-      cents = Math.floor(new_time / 10) % 100
-      if (cents < 10) {
-        cents = '0' + cents
-      }
+      const minutes = Math.floor(new_time / 1000 / 60)
+      const seconds = (Math.floor(new_time / 1000) % 60)
+        .toString()
+        .padStart(2, '0')
+      const cents = (Math.floor(new_time / 10) % 100)
+        .toString()
+        .padStart(2, '0')
+
       $(this.options.chrono).text(minutes + ':' + seconds + ':' + cents)
     }
-    return (this.current_time = new_time)
+    this.current_time = new_time
   }
 
   got_strawberries() {
-    var i, len, ref, strawberry
-    ref = this.entities.strawberries
-    for (i = 0, len = ref.length; i < len; i++) {
-      strawberry = ref[i]
+    for (const strawberry of this.entities.strawberries) {
       if (strawberry.display) {
         return false
       }
@@ -200,25 +200,23 @@ class Level {
   }
 
   respawn_strawberries() {
-    var entity, i, len, ref, results
-    ref = this.entities.strawberries
-    results = []
-    for (i = 0, len = ref.length; i < len; i++) {
-      entity = ref[i]
-      results.push((entity.display = true))
+    for (const entity of this.entities.strawberries) {
+      entity.display = true
     }
-    return results
   }
 
   restart() {
     this.replay = new Replay(this)
+
     this.ghosts.reload()
     this.moto.destroy()
     this.moto = new Moto(this)
     this.moto.init()
+
     this.respawn_strawberries()
+
     this.init_timer()
-    return this.update_timer(true)
+    this.update_timer(true)
   }
 }
 

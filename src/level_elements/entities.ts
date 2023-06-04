@@ -3,12 +3,11 @@ import $ from 'jquery'
 import Constants from '../constants.js'
 import Level from '../level.js'
 import Assets from '../utils/assets.js'
-import { World } from '../temporaryTypes.js'
+import { Block2D, Pixi, World } from '../temporaryTypes.js'
 
 export type Entity = {
   id: string
   type_id: string
-  z: number
   size: {
     r: number
     z: number | undefined
@@ -20,7 +19,23 @@ export type Entity = {
     y: number
     angle: number
   }
-  params: {}
+  params: {
+    z?: string
+  }
+  z: number
+
+  file?: string
+  file_base?: string
+  file_ext?: string
+
+  center?: { x: number; y: number }
+
+  delay?: number
+  frames?: number
+  display?: boolean
+  aabb?: Block2D
+
+  sprite?: Pixi
 }
 
 export type PlayerStart = { x: number; y: number }
@@ -57,49 +72,46 @@ class Entities {
   }
 
   parse(xml) {
-    var entity,
-      j,
-      k,
-      len,
-      len1,
-      name,
-      sprite,
-      texture_name,
-      value,
-      xml_entities,
-      xml_entity,
-      xml_param,
-      xml_params
-    xml_entities = $(xml).find('entity')
-    for (j = 0, len = xml_entities.length; j < len; j++) {
-      xml_entity = xml_entities[j]
-      entity = {
+    const xml_entities = $(xml).find('entity')
+
+    //  parse entity xml
+    for (const xml_entity of xml_entities) {
+      // parse params xml
+      const xml_params = $(xml_entity).find('param')
+      const params: { z?: string } = {}
+      for (const xml_param of xml_params) {
+        const name = $(xml_param).attr('name')
+        const value = $(xml_param).attr('value')
+        params[name] = value
+      }
+
+      const size = {
+        r: parseFloat($(xml_entity).find('size').attr('r')),
+        z: parseInt($(xml_entity).find('size').attr('z')) || void 0,
+        width: parseFloat($(xml_entity).find('size').attr('width')),
+        height: parseFloat($(xml_entity).find('size').attr('height')),
+      }
+
+      const entity: Entity = {
         id: $(xml_entity).attr('id'),
         type_id: $(xml_entity).attr('typeid'),
-        size: {
-          r: parseFloat($(xml_entity).find('size').attr('r')),
-          z: parseInt($(xml_entity).find('size').attr('z')) || void 0,
-          width: parseFloat($(xml_entity).find('size').attr('width')),
-          height: parseFloat($(xml_entity).find('size').attr('height')),
-        },
+        size,
         position: {
           x: parseFloat($(xml_entity).find('position').attr('x')),
           y: parseFloat($(xml_entity).find('position').attr('y')),
           angle: parseFloat($(xml_entity).find('position').attr('angle')) || 0,
         },
-        params: {},
+        params,
+
+        // find correct z (z can be in <size z="?"> or in <param name="z" value="?">)
+        z: size.z || parseInt(params.z) || 0,
       }
-      xml_params = $(xml_entity).find('param')
-      for (k = 0, len1 = xml_params.length; k < len1; k++) {
-        xml_param = xml_params[k]
-        name = $(xml_param).attr('name')
-        value = $(xml_param).attr('value')
-        entity.params[name] = value
-      }
-      entity['z'] = entity.size.z || parseInt(entity.params.z) || 0
-      texture_name = this.entity_texture_name(entity)
+
+      // Get default values for sprite from theme
+      const texture_name = this.entity_texture_name(entity)
       if (texture_name) {
-        sprite = this.assets.theme.sprite_params(texture_name)
+        const sprite = this.assets.theme.sprite_params(texture_name)
+
         entity.file = sprite.file
         entity.file_base = sprite.file_base
         entity.file_ext = sprite.file_ext
@@ -151,112 +163,73 @@ class Entities {
   }
 
   load_assets() {
-    var entity, i, j, len, ref, results
-    ref = this.list
-    results = []
-    for (j = 0, len = ref.length; j < len; j++) {
-      entity = ref[j]
+    for (const entity of this.list) {
       if (entity.display) {
         if (entity.frames === 0) {
-          results.push(this.assets.anims.push(entity.file))
+          this.assets.anims.push(entity.file)
         } else {
-          results.push(
-            function () {
-              var k, ref1, results1
-              results1 = []
-              for (
-                i = k = 0, ref1 = entity.frames - 1;
-                0 <= ref1 ? k <= ref1 : k >= ref1;
-                i = 0 <= ref1 ? ++k : --k
-              ) {
-                results1.push(
-                  this.assets.anims.push(this.frame_name(entity, i))
-                )
-              }
-              return results1
-            }.call(this)
-          )
+          for (let i = 0; i <= entity.frames - 1; i++) {
+            this.assets.anims.push(this.frame_name(entity, i))
+          }
         }
-      } else {
-        results.push(void 0)
       }
     }
-    return results
   }
 
   init() {
     this.init_physics_parts()
-    return this.init_sprites()
+    this.init_sprites()
   }
 
   init_physics_parts() {
-    var entity, j, len, ref, results
-    ref = this.list
-    results = []
-    for (j = 0, len = ref.length; j < len; j++) {
-      entity = ref[j]
+    for (const entity of this.list) {
+      // End of level
       if (entity.type_id === 'EndOfLevel') {
         this.create_entity(entity, 'end_of_level')
-        results.push((this.end_of_level = entity))
+        this.end_of_level = entity
+
+        // Strawberries
       } else if (entity.type_id === 'Strawberry') {
         this.create_entity(entity, 'strawberry')
-        results.push(this.strawberries.push(entity))
+        this.strawberries.push(entity)
+
+        // Wrecker
       } else if (entity.type_id === 'Wrecker') {
         this.create_entity(entity, 'wrecker')
-        results.push(this.wreckers.push(entity))
+        this.wreckers.push(entity)
+
+        // Player start
       } else if (entity.type_id === 'PlayerStart') {
-        results.push(
-          (this.player_start = {
-            x: entity.position.x,
-            y: entity.position.y,
-          })
-        )
-      } else {
-        results.push(void 0)
+        this.player_start = {
+          x: entity.position.x,
+          y: entity.position.y,
+        }
       }
     }
-    return results
   }
 
   init_sprites() {
-    var entity, j, len, ref, results
-    ref = this.list
-    results = []
-    for (j = 0, len = ref.length; j < len; j++) {
-      entity = ref[j]
+    for (const entity of this.list) {
       if (entity.z < 0) {
-        results.push(
-          this.init_entity(entity, this.level.camera.negative_z_container)
-        )
+        this.init_entity(entity, this.level.camera.negative_z_container)
       } else if (entity.z > 0) {
-        results.push(
-          this.init_entity(entity, this.level.camera.positive_z_container)
-        )
+        this.init_entity(entity, this.level.camera.positive_z_container)
       } else if (entity.z === 0) {
-        results.push(
-          this.init_entity(entity, this.level.camera.neutral_z_container)
-        )
-      } else {
-        results.push(void 0)
+        this.init_entity(entity, this.level.camera.neutral_z_container)
       }
     }
-    return results
   }
 
   init_entity(entity, container) {
-    var i, j, ref, textures
     if (entity.frames > 0) {
-      textures = []
-      for (
-        i = j = 0, ref = entity.frames - 1;
-        0 <= ref ? j <= ref : j >= ref;
-        i = 0 <= ref ? ++j : --j
-      ) {
+      const textures = []
+      for (let i = 0; i <= entity.frames - 1; i++) {
         textures.push(
           // @ts-ignore
           PIXI.Texture.from(this.assets.get_url(this.frame_name(entity, i)))
         )
       }
+
       // @ts-ignore
       entity.sprite = new PIXI.AnimatedSprite(textures)
       entity.sprite.animationSpeed = 0.5 - 0.5 * entity.delay
@@ -267,6 +240,7 @@ class Entities {
       entity.sprite = new PIXI.Sprite.from(this.assets.get_url(entity.file))
       container.addChild(entity.sprite)
     }
+
     if (entity.sprite) {
       entity.sprite.width = entity.size.width
       entity.sprite.height = entity.size.height
@@ -274,42 +248,44 @@ class Entities {
       entity.sprite.anchor.y = 1 - entity.center.y / entity.size.height
       entity.sprite.x = entity.position.x
       entity.sprite.y = -entity.position.y
-      return (entity.sprite.rotation = -entity.position.angle)
+      entity.sprite.rotation = -entity.position.angle
     }
   }
 
   create_entity(entity, name) {
-    var body, bodyDef, fixDef
-    fixDef = new b2FixtureDef()
+    // Create fixture
+    const fixDef = new b2FixtureDef()
     fixDef.shape = new b2CircleShape(entity.size.r)
     fixDef.isSensor = true
-    bodyDef = new b2BodyDef()
+
+    // Create body
+    const bodyDef = new b2BodyDef()
+
+    // Assign body position
     bodyDef.position.x = entity.position.x
     bodyDef.position.y = entity.position.y
+
     bodyDef.userData = {
       name: name,
       entity: entity,
     }
+
     bodyDef.type = b2Body.b2_staticBody
-    body = this.world.CreateBody(bodyDef)
+
+    // Assign fixture to body and add body to 2D world
+    const body = this.world.CreateBody(bodyDef)
     body.CreateFixture(fixDef)
+
     return body
   }
 
   update() {
-    var j, len, ref, results
     if (!Constants.debug_physics) {
-      ref = this.list
-      results = []
-      for (j = 0, len = ref.length; j < len; j++) {
-        let entity = ref[j]
+      for (const entity of this.list) {
         if (entity.sprite) {
-          results.push((entity.sprite.visible = this.visible(entity)))
-        } else {
-          results.push(void 0)
+          entity.sprite.visible = this.visible(entity)
         }
       }
-      return results
     }
   }
 
@@ -327,18 +303,20 @@ class Entities {
   }
 
   compute_aabb(entity) {
-    var aabb, lower_bound, upper_bound
-    lower_bound = {
+    const lower_bound = {
       x: entity.position.x - entity.size.width + entity.center.x,
       y: entity.position.y - entity.center.y,
     }
-    upper_bound = {
+
+    const upper_bound = {
       x: lower_bound.x + entity.size.width,
       y: lower_bound.y + entity.size.height,
     }
-    aabb = new b2AABB()
+
+    const aabb = new b2AABB()
     aabb.lowerBound.Set(lower_bound.x, lower_bound.y)
     aabb.upperBound.Set(upper_bound.x, upper_bound.y)
+
     return aabb
   }
 
@@ -347,13 +325,10 @@ class Entities {
   }
 
   frame_name(entity, frame_number) {
-    return (
-      '' +
-      entity.file_base +
-      (frame_number / 100.0).toFixed(2).toString().substring(2) +
-      '.' +
-      entity.file_ext
-    )
+    return `${entity.file_base}${(frame_number / 100.0)
+      .toFixed(2)
+      .toString()
+      .substring(2)}.${entity.file_ext}`
   }
 }
 

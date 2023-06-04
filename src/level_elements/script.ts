@@ -13,9 +13,9 @@ class Script {
   }
 
   parse(xml) {
-    var xml_script
-    xml_script = $(xml).find('script')
+    const xml_script = $(xml).find('script')
     this.code = xml_script.text()
+
     return this
   }
 
