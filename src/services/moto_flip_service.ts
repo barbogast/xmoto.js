@@ -6,7 +6,9 @@
 // Careful, the position of the left wheel is assigned to the one of the
 // right wheel and vice-versa (this is symmetric, it's normal!)
 
-export function execute(moto) {
+import Moto from '../moto/moto'
+
+export function execute(moto: Moto) {
   const body = {
     position: moto.body.GetPosition(),
     angle: moto.body.GetAngle(),

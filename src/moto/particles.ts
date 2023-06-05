@@ -9,7 +9,7 @@ class Particles {
   world: World
   list: Block2D[]
 
-  constructor(level, replay?) {
+  constructor(level: Level) {
     this.level = level
     this.physics = level.physics
     this.world = this.physics.world

@@ -56,7 +56,7 @@ class Level {
   stage: any
   need_to_restart: boolean
 
-  constructor(renderer, options) {
+  constructor(renderer, options: Options) {
     this.renderer = renderer
     this.options = options
 
@@ -92,7 +92,7 @@ class Level {
     this.ghosts = new Ghosts(this)
   }
 
-  load_from_file(filename, callback) {
+  load_from_file(filename: string, callback: () => void) {
     this.assets.parse_theme('modern.xml', () =>
       $.ajax({
         type: 'GET',
@@ -104,7 +104,7 @@ class Level {
     )
   }
 
-  load_level(xml, callback) {
+  load_level(xml, callback: () => void) {
     this.infos.parse(xml)
     this.sky.parse(xml)
     this.blocks.parse(xml)

@@ -34,7 +34,7 @@ export function inputs_to_string(inputs) {
   return LZString.compressToBase64(string)
 }
 
-export function string_to_inputs(string): ReplayInputs {
+export function string_to_inputs(string: string): ReplayInputs {
   const inputs = {
     up_down: [],
     up_up: [],

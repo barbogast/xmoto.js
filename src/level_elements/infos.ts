@@ -5,23 +5,23 @@ import Assets from '../utils/assets'
 class Infos {
   level: Level
   assets: Assets
-  identifier: string
-  pack_name: string
-  pack_id: string
-  r_version: string
-  name: string
-  description: string
-  author: string
-  date: string
-  border: string
-  music: string
+  identifier?: string
+  pack_name?: string
+  pack_id?: string
+  r_version?: string
+  name?: string
+  description?: string
+  author?: string
+  date?: string
+  border?: string
+  music?: string
 
-  constructor(level) {
+  constructor(level: Level) {
     this.level = level
     this.assets = level.assets
   }
 
-  parse(xml) {
+  parse(xml: string) {
     var xml_border, xml_infos, xml_level, xml_music
     xml_level = $(xml).find('level')
     this.identifier = xml_level.attr('id')

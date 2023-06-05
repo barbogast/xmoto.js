@@ -1,8 +1,8 @@
-var Constants, b2Vec2
+var b2Vec2
 // @ts-ignore
 b2Vec2 = Box2D.Common.Math.b2Vec2
 
-Constants = {
+const Constants = {
   //
   // GENERAL
   //
@@ -389,7 +389,7 @@ Constants = {
         'upper_leg',
         'lower_arm',
         'upper_arm',
-      ]
+      ] as const
       for (const element of elements) {
         Constants[element].collisions = false
       }

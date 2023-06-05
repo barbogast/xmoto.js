@@ -40,7 +40,7 @@ $.xmoto = function (level_filename, options: Options = {}) {
     main_loop(level_filename, renderer, options)
   }
 
-  const load_options = function (options) {
+  const load_options = function (options: Options) {
     const defaults = {
       // Selectors
       canvas: '#xmoto', // canvas selector
@@ -74,7 +74,7 @@ $.xmoto = function (level_filename, options: Options = {}) {
     return options
   }
 
-  const bind_render_to_dom = function (renderer, options) {
+  const bind_render_to_dom = function (renderer, options: Options) {
     $('#xmoto canvas').remove()
 
     $(options.loading).show()
@@ -102,7 +102,11 @@ $.xmoto = function (level_filename, options: Options = {}) {
     return stats
   }
 
-  const main_loop = function (level_filename, renderer, options) {
+  const main_loop = function (
+    level_filename: string,
+    renderer,
+    options: Options
+  ) {
     let stats_fps, stats_ms
     if (Constants.debug) {
       stats_fps = bind_stats_fps()

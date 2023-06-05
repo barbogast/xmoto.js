@@ -1,5 +1,6 @@
 import Constants from './constants.js'
 import Level from './level.js'
+import Moto from './moto/moto.js'
 import { World } from './temporaryTypes.js'
 import Assets from './utils/assets.js'
 
@@ -8,7 +9,7 @@ class Listeners {
   assets: Assets
   world: World
 
-  constructor(level) {
+  constructor(level: Level) {
     this.level = level
     this.assets = level.assets
     this.world = level.physics.world
@@ -113,7 +114,7 @@ class Listeners {
     )
   }
 
-  trigger_restart(moto) {
+  trigger_restart(moto: Moto) {
     // createjs.Sound.play('EndOfLevel')
     if (moto.ghost) {
       moto.dead = true
@@ -123,7 +124,7 @@ class Listeners {
     }
   }
 
-  kill_moto(moto) {
+  kill_moto(moto: Moto) {
     if (!moto.dead) {
       moto.dead = true
 

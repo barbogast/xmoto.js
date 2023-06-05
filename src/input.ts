@@ -11,7 +11,7 @@ class Input {
   right: boolean
   space: boolean
 
-  constructor(level) {
+  constructor(level: Level) {
     this.level = level
     this.assets = level.assets
     this.up = false
@@ -30,7 +30,7 @@ class Input {
     // Disable up, down, left, right to scroll
     // left: 37, up: 38, right: 39, down: 40, spacebar: 32, pageup: 33, pagedown: 34, end: 35, home: 36
     const keys = [37, 38, 39, 40, 32]
-    const preventDefault = function (e) {
+    const preventDefault = function (e: Event) {
       e = e || window.event
       if (e.preventDefault) {
         e.preventDefault()
@@ -38,7 +38,7 @@ class Input {
         e.returnValue = false
       }
     }
-    const keydown = function (e) {
+    const keydown = function (e: KeyboardEvent) {
       for (const i of keys) {
         if (e.keyCode === i) {
           preventDefault(e)
@@ -85,7 +85,9 @@ class Input {
 
           $.post(url, {
             steps: this.level.physics.steps,
-            image: $(this.level.options.canvas)[0].toDataURL(),
+            image: (
+              $(this.level.options.canvas)[0] as HTMLCanvasElement
+            ).toDataURL(),
           })
             .done(() => alert('Capture uploaded'))
             .fail(() => alert('Capture failed'))

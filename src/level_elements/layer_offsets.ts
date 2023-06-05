@@ -13,19 +13,19 @@ class LayerOffsets {
   assets: Assets
   list: LayerOffset[]
 
-  constructor(level) {
+  constructor(level: Level) {
     this.level = level
     this.assets = level.assets
     this.list = []
   }
 
-  parse(xml) {
+  parse(xml: string) {
     const xml_layer_offsets = $(xml).find('layeroffsets layeroffset')
 
     for (const xml_layer_offset of xml_layer_offsets) {
       const layer_offset = {
-        x: parseFloat($(xml_layer_offset).attr('x')),
-        y: parseFloat($(xml_layer_offset).attr('y')),
+        x: parseFloat($(xml_layer_offset).attr('x')!),
+        y: parseFloat($(xml_layer_offset).attr('y')!),
         front_layer: $(xml_layer_offset).attr('frontlayer'),
       }
 

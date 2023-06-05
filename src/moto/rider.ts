@@ -5,7 +5,6 @@ import Physics from '../physics.js'
 import { Block2D } from '../temporaryTypes.js'
 import Assets from '../utils/assets.js'
 import * as Math2D from '../utils/math2d.js'
-import Ghost from './ghost.js'
 import Moto from './moto.js'
 
 // @ts-ignore
@@ -27,7 +26,7 @@ class Rider {
   world: any
   moto: Moto
   mirror: number
-  ghost: Ghost
+  ghost: boolean
   player_start: PlayerStart
   neck_joint: Block2D
   ankle_joint: Block2D
@@ -49,7 +48,7 @@ class Rider {
   lower_arm_sprite: Block2D
   upper_arm_sprite: Block2D
 
-  constructor(level, moto) {
+  constructor(level: Level, moto: Moto) {
     this.level = level
     this.assets = level.assets
     this.world = level.physics.world

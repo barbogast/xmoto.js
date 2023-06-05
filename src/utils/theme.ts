@@ -32,20 +32,18 @@ export type EdgeTheme = {
 
 class Theme {
   filename: string
-  callback: () => {}
-  sprites: Sprite[]
-  edges: {
-    [key: string]: EdgeTheme
-  }
-  textures: Texture[]
+  callback: () => void
+  sprites: { [key: string]: Sprite }
+  edges: { [key: string]: EdgeTheme }
+  textures: { [key: string]: Texture }
 
-  constructor(filename, callback) {
+  constructor(filename: string, callback: () => void) {
     this.filename = filename
     this.callback = callback
 
-    this.sprites = []
+    this.sprites = {}
     this.edges = {}
-    this.textures = []
+    this.textures = {}
 
     $.ajax({
       type: 'GET',
@@ -97,15 +95,15 @@ class Theme {
     this.callback()
   }
 
-  sprite_params(name) {
+  sprite_params(name: string) {
     return this.sprites[name]
   }
 
-  edge_params(name) {
+  edge_params(name: string) {
     return this.edges[name]
   }
 
-  texture_params(name) {
+  texture_params(name: string) {
     return this.textures[name]
   }
 }

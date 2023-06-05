@@ -72,7 +72,7 @@ const display_constants = function () {
   $('ul > li > ul:not(:has(> li))').parent().hide()
 }
 
-const create_form_with_url_params = function (params) {
+const create_form_with_url_params = function (params: URLSearchParams) {
   for (const [key, value] of Object.entries(params)) {
     const new_input = $('form.debug .template:first')
       .clone()

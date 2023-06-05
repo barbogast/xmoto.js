@@ -2,6 +2,7 @@ import $ from 'jquery'
 
 import Constants from '../constants.js'
 import * as ReplayConversionService from '../services/replay_conversion_service.js'
+import Level from '../level.js'
 
 export type ReplayInputs = {
   up_down: any[]
@@ -22,7 +23,7 @@ class Replay {
   inputs: ReplayInputs
   key_steps: {}
 
-  constructor(level) {
+  constructor(level: Level) {
     this.level = level
     this.success = false
     this.steps = 0
@@ -56,7 +57,7 @@ class Replay {
       'right_down',
       'right_up',
       'space_pressed',
-    ]
+    ] as const
     for (const key of keys) {
       new_replay.inputs[key] = this.inputs[key].slice()
     }
@@ -75,7 +76,7 @@ class Replay {
         'lower_leg',
         'upper_arm',
         'lower_arm',
-      ]
+      ] as const
       for (const part of parts) {
         new_replay.key_steps[key][part] = {
           position: {

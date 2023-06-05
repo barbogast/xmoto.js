@@ -7,12 +7,12 @@ class Script {
   assets: Assets
   code: string
 
-  constructor(level) {
+  constructor(level: Level) {
     this.level = level
     this.assets = level.assets
   }
 
-  parse(xml) {
+  parse(xml: string) {
     const xml_script = $(xml).find('script')
     this.code = xml_script.text()
 
@@ -21,7 +21,7 @@ class Script {
 
   init() {}
 
-  display(ctx) {}
+  display() {}
 }
 
 export default Script

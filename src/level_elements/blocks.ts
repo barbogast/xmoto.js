@@ -64,43 +64,42 @@ class Blocks {
   front_list: Block[]
   edges: Edges
 
-  constructor(level) {
+  constructor(level: Level) {
     this.level = level
     this.assets = level.assets
     this.theme = this.assets.theme
     this.list = []
     this.back_list = []
     this.front_list = []
-    this.edges = new Edges(this.level)
   }
 
-  parse(xml) {
+  parse(xml: string) {
     const xml_blocks = $(xml).find('block')
 
     for (const xml_block of xml_blocks) {
       const usetexture_id = $(xml_block)
         .find('usetexture')
-        .attr('id')
+        .attr('id')!
         .toLowerCase()
 
       const block: Block = {
-        id: $(xml_block).attr('id'),
+        id: $(xml_block).attr('id')!,
         position: {
-          x: parseFloat($(xml_block).find('position').attr('x')),
-          y: parseFloat($(xml_block).find('position').attr('y')),
+          x: parseFloat($(xml_block).find('position').attr('x')!),
+          y: parseFloat($(xml_block).find('position').attr('y')!),
           dynamic: $(xml_block).find('position').attr('dynamic') === 'true',
           background:
             $(xml_block).find('position').attr('background') === 'true',
         },
         usetexture: {
           id: usetexture_id === 'default' ? 'dirt' : usetexture_id,
-          scale: parseFloat($(xml_block).find('usetexture').attr('scale')),
+          scale: parseFloat($(xml_block).find('usetexture').attr('scale')!),
         },
         physics: {
-          grip: parseFloat($(xml_block).find('physics').attr('grip')),
+          grip: parseFloat($(xml_block).find('physics').attr('grip')!),
         },
         edges: {
-          angle: parseFloat($(xml_block).find('edges').attr('angle')),
+          angle: parseFloat($(xml_block).find('edges').attr('angle')!),
           materials: [],
         },
         vertices: [],
@@ -112,12 +111,12 @@ class Blocks {
         const material = {
           name: $(xml_material).attr('name'),
           edge: $(xml_material).attr('edge'),
-          color_r: parseInt($(xml_material).attr('color_r')),
-          color_g: parseInt($(xml_material).attr('color_g')),
-          color_b: parseInt($(xml_material).attr('color_b')),
-          color_a: parseInt($(xml_material).attr('color_a')),
-          scale: parseFloat($(xml_material).attr('scale')),
-          depth: parseFloat($(xml_material).attr('depth')),
+          color_r: parseInt($(xml_material).attr('color_r')!),
+          color_g: parseInt($(xml_material).attr('color_g')!),
+          color_b: parseInt($(xml_material).attr('color_b')!),
+          color_a: parseInt($(xml_material).attr('color_a')!),
+          scale: parseFloat($(xml_material).attr('scale')!),
+          depth: parseFloat($(xml_material).attr('depth')!),
         }
 
         block.edges.materials.push(material)
@@ -126,12 +125,12 @@ class Blocks {
       const xml_vertices = $(xml_block).find('vertex')
       for (const xml_vertex of xml_vertices) {
         const vertex = {
-          x: parseFloat($(xml_vertex).attr('x')),
-          y: parseFloat($(xml_vertex).attr('y')),
-          absolute_x: parseFloat($(xml_vertex).attr('x')) + block.position.x, // absolutes positions are here to
-          absolute_y: parseFloat($(xml_vertex).attr('y')) + block.position.y, // accelerate drawing of each frame
+          x: parseFloat($(xml_vertex).attr('x')!),
+          y: parseFloat($(xml_vertex).attr('y')!),
+          absolute_x: parseFloat($(xml_vertex).attr('x')!) + block.position.x, // absolutes positions are here to
+          absolute_y: parseFloat($(xml_vertex).attr('y')!) + block.position.y, // accelerate drawing of each frame
           edge: $(xml_vertex).attr('edge')
-            ? $(xml_vertex).attr('edge').toLowerCase()
+            ? $(xml_vertex).attr('edge')!.toLowerCase()
             : undefined,
         }
 
@@ -234,7 +233,7 @@ class Blocks {
     }
   }
 
-  visible(block) {
+  visible(block: Block) {
     return block.aabb.TestOverlap(this.level.camera.aabb)
   }
 

@@ -21,7 +21,7 @@ class Sky {
   filename: string
   sprite: Pixi
 
-  constructor(level) {
+  constructor(level: Level) {
     this.level = level
     this.assets = level.assets
     this.theme = this.assets.theme
@@ -31,12 +31,12 @@ class Sky {
   parse(xml) {
     const xml_sky = $(xml).find('level info sky')
     this.name = xml_sky.text().toLowerCase()
-    this.color_r = parseInt(xml_sky.attr('color_r'))
-    this.color_g = parseInt(xml_sky.attr('color_g'))
-    this.color_b = parseInt(xml_sky.attr('color_b'))
-    this.color_a = parseInt(xml_sky.attr('color_a'))
-    this.zoom = parseFloat(xml_sky.attr('zoom'))
-    this.offset = parseFloat(xml_sky.attr('offset'))
+    this.color_r = parseInt(xml_sky.attr('color_r')!)
+    this.color_g = parseInt(xml_sky.attr('color_g')!)
+    this.color_b = parseInt(xml_sky.attr('color_b')!)
+    this.color_a = parseInt(xml_sky.attr('color_a')!)
+    this.zoom = parseFloat(xml_sky.attr('zoom')!)
+    this.offset = parseFloat(xml_sky.attr('offset')!)
 
     if (this.name === '') {
       this.name = 'sky1'

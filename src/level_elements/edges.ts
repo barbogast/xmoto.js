@@ -5,8 +5,8 @@ import Assets from '../utils/assets.js'
 import Theme, { EdgeTheme } from '../utils/theme.js'
 import { Block, Vertex } from './blocks.js'
 import { Block2D, Pixi } from '../temporaryTypes.js'
+import { Point } from '../types.js'
 
-type Point = { x: number; y: number }
 type Vertices = [Point, Point, Point, Point]
 
 export type Edge = {
@@ -32,7 +32,7 @@ class Edges {
 
   list: Edge[] // List of edges
 
-  constructor(level, block?) {
+  constructor(level: Level, block: Block) {
     this.level = level
     this.block = block
     this.assets = this.level.assets

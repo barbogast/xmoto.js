@@ -23,7 +23,7 @@ class Camera {
   clipping: Pixi
   aabb: Block2D
 
-  constructor(level) {
+  constructor(level: Level) {
     this.level = level
     this.options = level.options
 
@@ -154,9 +154,11 @@ class Camera {
   // If there are some issues on other systems than MacOS,
   // check this to find a solution : http://stackoverflow.com/questions/5527601/normalizing-mousewheel-speed-across-browsers
   init_scroll() {
-    const scroll = (event) => {
+    const scroll = (event: WheelEvent) => {
       let delta
+      // @ts-ignore Event is available but deprecated (https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event#wheelevent.wheeldelta)
       if (event.wheelDelta) {
+        // @ts-ignore Event is available but deprecated (https://developer.mozilla.org/en-US/docs/Web/API/Element/wheel_event#wheelevent.wheeldelta)
         delta = event.wheelDelta / 40
       } else if (event.detail) {
         delta = -event.detail
@@ -188,7 +190,6 @@ class Camera {
       if (this.scale.y < max_limit_y) {
         this.scale.y = max_limit_y
       }
-      return event.preventDefault() && false
     }
 
     const canvas = $(this.level.options.canvas).get(0)

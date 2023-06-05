@@ -8,10 +8,7 @@ class Ghost {
   transparent: boolean
   moto: Moto
 
-  constructor(level, replay, transparent?) {
-    if (transparent == null) {
-      transparent = true
-    }
+  constructor(level: Level, replay: Replay, transparent = true) {
     this.level = level
     this.replay = replay
     this.transparent = transparent

@@ -9,7 +9,7 @@ class Assets {
   effects: string[]
   moto: string[]
   sounds: string[]
-  resources: {}
+  resources: { [name: string]: { data: string; url: string } }
 
   constructor() {
     this.theme = new Theme('', () => {})
@@ -23,12 +23,12 @@ class Assets {
     this.resources = {}
   }
 
-  parse_theme(filename, callback) {
+  parse_theme(filename: string, callback: () => {}) {
     // extend to keep the same pointer to @theme that is already in other objects
     Object.assign(this.theme, new Theme('modern.xml', callback))
   }
 
-  load(callback) {
+  load(callback: () => void) {
     // @ts-ignore
     PIXI.Loader.shared.reset()
 
@@ -71,11 +71,11 @@ class Assets {
   }
 
   // Get an asset by its name ("id")
-  get(name) {
+  get(name: string) {
     return this.resources[name].data
   }
 
-  get_url(name) {
+  get_url(name: string) {
     return this.resources[name].url
   }
 

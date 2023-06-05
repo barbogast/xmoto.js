@@ -1,10 +1,12 @@
-export function distance_between_points(point1, point2) {
+import { Point } from '../types'
+
+export function distance_between_points(point1: Point, point2: Point) {
   const a = Math.pow(point1.x - point2.x, 2)
   const b = Math.pow(point1.y - point2.y, 2)
   return Math.sqrt(a + b)
 }
 
-export function angle_between_points(point1, point2) {
+export function angle_between_points(point1: Point, point2: Point) {
   if (point1.y - point2.y === 0) {
     if (point1.y > point2.y) {
       return Math.PI / 2
@@ -21,7 +23,7 @@ export function angle_between_points(point1, point2) {
 }
 
 // Rotate point from angle around axe
-export function rotate_point(point, angle, rotation_axe) {
+export function rotate_point(point: Point, angle: number, rotation_axe: Point) {
   return {
     x: rotation_axe.x + point.x * Math.cos(angle) - point.y * Math.sin(angle),
     y: rotation_axe.y + point.x * Math.sin(angle) + point.y * Math.cos(angle),
@@ -29,7 +31,7 @@ export function rotate_point(point, angle, rotation_axe) {
 }
 
 // If shape has 3 collinear vertices, move them around to avoid that
-export function not_collinear_vertices(vertices) {
+export function not_collinear_vertices(vertices: Point[]) {
   const size = vertices.length
   for (const [i, vertex] of vertices.entries()) {
     if (vertex.x === vertices[(i + 1) % size].x && vertices[(i + 2) % size].x) {

@@ -1,7 +1,9 @@
 import Camera from './camera.js'
 import Constants from './constants.js'
 import Level, { Options } from './level.js'
+import { Block } from './level_elements/blocks.js'
 import Ghost from './moto/ghost.js'
+import Replay from './moto/replay.js'
 import { World } from './temporaryTypes.js'
 
 // @ts-ignore
@@ -31,7 +33,7 @@ class Physics {
   step: number
   steps: number
 
-  constructor(level) {
+  constructor(level: Level) {
     this.level = level
     this.options = level.options
     this.camera = level.camera
@@ -82,7 +84,7 @@ class Physics {
     this.init()
   }
 
-  save_replay_and_init_ghosts(replay) {
+  save_replay_and_init_ghosts(replay: Replay) {
     replay.add_step() // add last step
     replay.save()
     this.level.ghosts.player = new Ghost(this.level, replay.clone())
@@ -145,7 +147,7 @@ class Physics {
   }
 
   create_lines(
-    block,
+    block: Block,
     name,
     density = 1.0,
     restitution = 0.5,

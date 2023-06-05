@@ -5,7 +5,6 @@ import * as Math2D from '../utils/math2d.js'
 import * as MotoFlipService from '../services/moto_flip_service.js'
 import Level from '../level.js'
 import Assets from '../utils/assets.js'
-import Ghost from './ghost.js'
 import { PlayerStart } from '../level_elements/entities.js'
 import { Block2D, World } from '../temporaryTypes.js'
 
@@ -34,7 +33,7 @@ class Moto {
   world: World
   mirror: number
   dead: boolean
-  ghost: Ghost
+  ghost: boolean
   rider: Rider
   player_start: PlayerStart
   left_revolute_joint: Block2D
@@ -53,10 +52,7 @@ class Moto {
   left_axle_sprite: Block2D
   right_axle_sprite: Block2D
 
-  constructor(level, ghost?) {
-    if (ghost == null) {
-      ghost = false
-    }
+  constructor(level: Level, ghost = false) {
     this.level = level
     this.assets = level.assets
     this.world = level.physics.world
@@ -147,7 +143,7 @@ class Moto {
       'right_wheel',
       'left_axle',
       'right_axle',
-    ]
+    ] as const
     for (const part of parts) {
       let asset_name
       if (this.ghost) {
@@ -166,7 +162,13 @@ class Moto {
     this.rider.init_sprites()
   }
 
-  move(input?) {
+  move(input?: {
+    up: boolean
+    down: boolean
+    left: boolean
+    right: boolean
+    space: boolean
+  }) {
     if (!input) {
       input = this.level.input
     }
@@ -281,7 +283,7 @@ class Moto {
     // }
   }
 
-  wheeling(force) {
+  wheeling(force: number) {
     const moto_angle = this.mirror * this.body.GetAngle()
 
     this.body.ApplyTorque(this.mirror * force * 0.5)

@@ -21,6 +21,7 @@ export type Entity = {
   }
   params: {
     z?: string
+    name?: string
   }
   z: number
 
@@ -58,10 +59,10 @@ class Entities {
   list: Entity[]
   strawberries: Entity[]
   wreckers: Entity[]
-  end_of_level: Entity
-  player_start: PlayerStart
+  end_of_level?: Entity
+  player_start?: PlayerStart
 
-  constructor(level) {
+  constructor(level: Level) {
     this.level = level
     this.assets = level.assets
     this.world = level.physics.world
@@ -70,7 +71,7 @@ class Entities {
     this.wreckers = []
   }
 
-  parse(xml) {
+  parse(xml: string) {
     const xml_entities = $(xml).find('entity')
 
     //  parse entity xml
@@ -85,20 +86,20 @@ class Entities {
       }
 
       const size = {
-        r: parseFloat($(xml_entity).find('size').attr('r')),
-        z: parseInt($(xml_entity).find('size').attr('z')) || void 0,
-        width: parseFloat($(xml_entity).find('size').attr('width')),
-        height: parseFloat($(xml_entity).find('size').attr('height')),
+        r: parseFloat($(xml_entity).find('size').attr('r')!),
+        z: parseInt($(xml_entity).find('size').attr('z')!) || void 0,
+        width: parseFloat($(xml_entity).find('size').attr('width')!),
+        height: parseFloat($(xml_entity).find('size').attr('height')!),
       }
 
       const entity: Entity = {
-        id: $(xml_entity).attr('id'),
-        type_id: $(xml_entity).attr('typeid'),
+        id: $(xml_entity).attr('id')!,
+        type_id: $(xml_entity).attr('typeid')!,
         size,
         position: {
-          x: parseFloat($(xml_entity).find('position').attr('x')),
-          y: parseFloat($(xml_entity).find('position').attr('y')),
-          angle: parseFloat($(xml_entity).find('position').attr('angle')) || 0,
+          x: parseFloat($(xml_entity).find('position').attr('x')!),
+          y: parseFloat($(xml_entity).find('position').attr('y')!),
+          angle: parseFloat($(xml_entity).find('position').attr('angle')!) || 0,
         },
         params,
 
@@ -219,7 +220,7 @@ class Entities {
     }
   }
 
-  init_entity(entity, container) {
+  init_entity(entity: Entity, container) {
     if (entity.frames > 0) {
       const textures = []
       for (let i = 0; i <= entity.frames - 1; i++) {
@@ -251,7 +252,7 @@ class Entities {
     }
   }
 
-  create_entity(entity, name) {
+  create_entity(entity: Entity, name: string) {
     // Create fixture
     const fixDef = new b2FixtureDef()
     fixDef.shape = new b2CircleShape(entity.size.r)
@@ -288,7 +289,7 @@ class Entities {
     }
   }
 
-  entity_texture_name(entity) {
+  entity_texture_name(entity: Entity) {
     if (entity.type_id === 'Sprite') {
       return entity.params.name
     } else if (entity.type_id === 'EndOfLevel') {
@@ -301,7 +302,7 @@ class Entities {
     }
   }
 
-  compute_aabb(entity) {
+  compute_aabb(entity: Entity) {
     const lower_bound = {
       x: entity.position.x - entity.size.width + entity.center.x,
       y: entity.position.y - entity.center.y,
@@ -319,11 +320,11 @@ class Entities {
     return aabb
   }
 
-  visible(entity) {
+  visible(entity: Entity) {
     return entity.aabb.TestOverlap(this.level.camera.aabb) && entity.display
   }
 
-  frame_name(entity, frame_number) {
+  frame_name(entity: Entity, frame_number: number) {
     return `${entity.file_base}${(frame_number / 100.0)
       .toFixed(2)
       .toString()

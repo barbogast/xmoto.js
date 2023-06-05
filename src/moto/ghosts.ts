@@ -8,10 +8,10 @@ class Ghosts {
   level: Level
   assets: Assets
   options: any
-  player: Ghost
+  player?: Ghost
   others: Ghost[]
 
-  constructor(level) {
+  constructor(level: Level) {
     this.level = level
     this.assets = level.assets
     this.options = level.options
@@ -41,7 +41,7 @@ class Ghosts {
   }
 
   all_ghosts() {
-    const ghosts = [].concat(this.others)
+    const ghosts = ([] as Ghost[]).concat(this.others)
     if (this.player) {
       ghosts.push(this.player)
     }

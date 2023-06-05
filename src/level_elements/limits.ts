@@ -13,21 +13,21 @@ class Limits {
   level: Level
   assets: Assets
   theme: Theme
-  player: { left: number; right: number; top: number; bottom: number }
-  screen: { left: number; right: number; top: number; bottom: number }
-  size: { x: number; y: number }
+  player?: { left: number; right: number; top: number; bottom: number }
+  screen?: { left: number; right: number; top: number; bottom: number }
+  size?: { x: number; y: number }
   left_wall_aabb: Block2D
   right_wall_aabb: Block2D
   bottom_wall_aabb: Block2D
   top_wall_aabb: Block2D
-  texture: string
-  texture_name: string
+  texture?: string
+  texture_name?: string
   left_sprite: Pixi
   right_sprite: Pixi
   bottom_sprite: Pixi
   top_sprite: Pixi
 
-  constructor(level) {
+  constructor(level: Level) {
     this.level = level
     this.assets = level.assets
     this.theme = this.assets.theme
@@ -40,17 +40,17 @@ class Limits {
     // be in the limits (maybe it's the limits where the player can go)
 
     this.player = {
-      left: parseFloat(xml_limits.attr('left')),
-      right: parseFloat(xml_limits.attr('right')),
-      top: parseFloat(xml_limits.attr('top')),
-      bottom: parseFloat(xml_limits.attr('bottom')),
+      left: parseFloat(xml_limits.attr('left')!),
+      right: parseFloat(xml_limits.attr('right')!),
+      top: parseFloat(xml_limits.attr('top')!),
+      bottom: parseFloat(xml_limits.attr('bottom')!),
     }
 
     this.screen = {
-      left: parseFloat(xml_limits.attr('left')) - 20,
-      right: parseFloat(xml_limits.attr('right')) + 20,
-      top: parseFloat(xml_limits.attr('top')) + 20,
-      bottom: parseFloat(xml_limits.attr('bottom')) - 20,
+      left: parseFloat(xml_limits.attr('left')!) - 20,
+      right: parseFloat(xml_limits.attr('right')!) + 20,
+      top: parseFloat(xml_limits.attr('top')!) + 20,
+      bottom: parseFloat(xml_limits.attr('bottom')!) - 20,
     }
 
     this.size = {
