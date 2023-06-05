@@ -5,6 +5,11 @@ import Level from '../level.js'
 import Assets from '../utils/assets.js'
 import { Block2D, Pixi, World } from '../temporaryTypes.js'
 
+type Params = {
+  z?: string
+  name?: string
+}
+
 export type Entity = {
   id: string
   type_id: string
@@ -19,10 +24,7 @@ export type Entity = {
     y: number
     angle: number
   }
-  params: {
-    z?: string
-    name?: string
-  }
+  params: Params
   z: number
 
   file?: string
@@ -78,9 +80,9 @@ class Entities {
     for (const xml_entity of xml_entities) {
       // parse params xml
       const xml_params = $(xml_entity).find('param')
-      const params: { z?: string } = {}
+      const params: Params = {}
       for (const xml_param of xml_params) {
-        const name = $(xml_param).attr('name')
+        const name = $(xml_param).attr('name') as keyof Params
         const value = $(xml_param).attr('value')
         params[name] = value
       }

@@ -54,40 +54,40 @@ class Theme {
     })
   }
 
-  load_theme(xml) {
+  load_theme(xml: string) {
     const xml_sprites = $(xml).find('sprite')
     for (const xml_sprite of xml_sprites) {
       if ($(xml_sprite).attr('type') === 'Entity') {
-        this.sprites[$(xml_sprite).attr('name')] = {
-          file: $(xml_sprite).attr('file'),
-          file_base: $(xml_sprite).attr('fileBase'),
-          file_ext: $(xml_sprite).attr('fileExtension'),
+        this.sprites[$(xml_sprite).attr('name')!] = {
+          file: $(xml_sprite).attr('file')!,
+          file_base: $(xml_sprite).attr('fileBase')!,
+          file_ext: $(xml_sprite).attr('fileExtension')!,
           size: {
-            width: parseFloat($(xml_sprite).attr('width')),
-            height: parseFloat($(xml_sprite).attr('height')),
+            width: parseFloat($(xml_sprite).attr('width')!),
+            height: parseFloat($(xml_sprite).attr('height')!),
           },
           center: {
-            x: parseFloat($(xml_sprite).attr('centerX')),
-            y: parseFloat($(xml_sprite).attr('centerY')),
+            x: parseFloat($(xml_sprite).attr('centerX')!),
+            y: parseFloat($(xml_sprite).attr('centerY')!),
           },
           frames: $(xml_sprite).find('frame').length,
-          delay: parseFloat($(xml_sprite).attr('delay')),
+          delay: parseFloat($(xml_sprite).attr('delay')!),
         }
       } else if ($(xml_sprite).attr('type') === 'EdgeEffect') {
-        this.edges[$(xml_sprite).attr('name').toLowerCase()] = {
-          file: $(xml_sprite).attr('file').toLowerCase(),
-          scale: parseFloat($(xml_sprite).attr('scale')),
-          depth: parseFloat($(xml_sprite).attr('depth')),
+        this.edges[$(xml_sprite).attr('name')!.toLowerCase()] = {
+          file: $(xml_sprite).attr('file')!.toLowerCase(),
+          scale: parseFloat($(xml_sprite).attr('scale')!),
+          depth: parseFloat($(xml_sprite).attr('depth')!),
         }
       } else if ($(xml_sprite).attr('type') === 'Texture') {
-        this.textures[$(xml_sprite).attr('name').toLowerCase()] = {
+        this.textures[$(xml_sprite).attr('name')!.toLowerCase()] = {
           file: $(xml_sprite).attr('file')
-            ? $(xml_sprite).attr('file').toLowerCase()
+            ? $(xml_sprite).attr('file')!.toLowerCase()
             : '',
-          file_base: $(xml_sprite).attr('fileBase'),
-          file_ext: $(xml_sprite).attr('fileExtension'),
+          file_base: $(xml_sprite).attr('fileBase')!,
+          file_ext: $(xml_sprite).attr('fileExtension')!,
           frames: $(xml_sprite).find('frame').length,
-          delay: parseFloat($(xml_sprite).attr('delay')),
+          delay: parseFloat($(xml_sprite).attr('delay')!),
         }
       }
     }

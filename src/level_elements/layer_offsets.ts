@@ -26,7 +26,7 @@ class LayerOffsets {
       const layer_offset = {
         x: parseFloat($(xml_layer_offset).attr('x')!),
         y: parseFloat($(xml_layer_offset).attr('y')!),
-        front_layer: $(xml_layer_offset).attr('frontlayer'),
+        front_layer: $(xml_layer_offset).attr('frontlayer')!,
       }
 
       this.list.push(layer_offset)
@@ -36,7 +36,7 @@ class LayerOffsets {
 
   init() {}
 
-  display(ctx) {}
+  display() {}
 }
 
 export default LayerOffsets

@@ -24,16 +24,13 @@ const bind_delete_params_buttons = function () {
   })
 }
 
-const override_constants_by_url_params = function (params) {
-  for (const key in params) {
-    const value = params[key]
+const override_constants_by_url_params = function (params: URLSearchParams) {
+  for (const [key, value] of params) {
     const array_keys = key.split('.')
     let array = Constants
     for (const [i, array_key] of array_keys.entries()) {
       if (i === array_keys.length - 1) {
-        if (value === '') {
-          delete params[key]
-        } else {
+        if (value !== '') {
           if (value === 'true' || value === 'false') {
             array[array_key] = value === 'true'
           } else if (array_key !== 'level') {

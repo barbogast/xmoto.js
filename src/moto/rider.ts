@@ -136,7 +136,13 @@ class Rider {
   }
 
   init_sprites() {
-    const parts = ['torso', 'upper_leg', 'lower_leg', 'upper_arm', 'lower_arm']
+    const parts = [
+      'torso',
+      'upper_leg',
+      'lower_leg',
+      'upper_arm',
+      'lower_arm',
+    ] as const
     for (const part of parts) {
       let asset_name
       if (this.ghost) {
@@ -288,7 +294,7 @@ class Rider {
     return this.world.CreateJoint(jointDef)
   }
 
-  update(visible) {
+  update(visible: boolean) {
     if (!Constants.debug_physics) {
       this.update_part(this.torso, 'torso', visible)
       this.update_part(this.upper_leg, 'upper_leg', visible)
@@ -298,7 +304,7 @@ class Rider {
     }
   }
 
-  update_part(part, name, visible) {
+  update_part(part, name: string, visible: boolean) {
     const sprite = this[name + '_sprite']
     sprite.visible = visible
 

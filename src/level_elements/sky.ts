@@ -28,7 +28,7 @@ class Sky {
     this.options = level.options
   }
 
-  parse(xml) {
+  parse(xml: string) {
     const xml_sky = $(xml).find('level info sky')
     this.name = xml_sky.text().toLowerCase()
     this.color_r = parseInt(xml_sky.attr('color_r')!)

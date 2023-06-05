@@ -5,15 +5,15 @@ import * as ReplayConversionService from '../services/replay_conversion_service.
 import Level from '../level.js'
 
 export type ReplayInputs = {
-  up_down: any[]
-  up_up: any[]
-  down_down: any[]
-  down_up: any[]
-  left_down: any[]
-  left_up: any[]
-  right_down: any[]
-  right_up: any[]
-  space_pressed: any[]
+  up_down: number[]
+  up_up: number[]
+  down_down: number[]
+  down_up: number[]
+  left_down: number[]
+  left_up: number[]
+  right_down: number[]
+  right_up: number[]
+  space_pressed: number[]
 }
 
 class Replay {

@@ -33,7 +33,7 @@ class Limits {
     this.theme = this.assets.theme
   }
 
-  parse(xml) {
+  parse(xml: string) {
     const xml_limits = $(xml).find('limits')
 
     // CAREFUL ! The limits on files are not real, some polygons could

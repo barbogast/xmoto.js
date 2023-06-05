@@ -62,7 +62,6 @@ class Blocks {
   list: Block[]
   back_list: Block[]
   front_list: Block[]
-  edges: Edges
 
   constructor(level: Level) {
     this.level = level
@@ -109,8 +108,8 @@ class Blocks {
       const xml_materials = $(xml_block).find('edges material')
       for (const xml_material of xml_materials) {
         const material = {
-          name: $(xml_material).attr('name'),
-          edge: $(xml_material).attr('edge'),
+          name: $(xml_material).attr('name')!,
+          edge: $(xml_material).attr('edge')!,
           color_r: parseInt($(xml_material).attr('color_r')!),
           color_g: parseInt($(xml_material).attr('color_g')!),
           color_b: parseInt($(xml_material).attr('color_b')!),

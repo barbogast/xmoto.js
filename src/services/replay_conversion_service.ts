@@ -7,7 +7,7 @@ import Constants from '../constants.js'
 import { ReplayInputs } from '../moto/replay.js'
 
 // String is like : "keyA:199,240,569|keyB:29,40,55..."
-export function inputs_to_string(inputs) {
+export function inputs_to_string(inputs: ReplayInputs) {
   let string = ''
   const keys = [
     'up_down',
@@ -19,7 +19,7 @@ export function inputs_to_string(inputs) {
     'right_down',
     'right_up',
     'space_pressed',
-  ]
+  ] as const
   for (const key of keys) {
     string += key + ':'
     for (const step of inputs[key]) {
@@ -35,7 +35,7 @@ export function inputs_to_string(inputs) {
 }
 
 export function string_to_inputs(string: string): ReplayInputs {
-  const inputs = {
+  const inputs: ReplayInputs = {
     up_down: [],
     up_up: [],
     down_down: [],
@@ -51,7 +51,7 @@ export function string_to_inputs(string: string): ReplayInputs {
 
   for (const key of keys) {
     const splitted = key.split(':')
-    const name = splitted[0]
+    const name = splitted[0] as keyof ReplayInputs
     const values = splitted[1].split(',')
 
     inputs[name] = []
@@ -82,7 +82,7 @@ export function key_steps_to_string(key_steps) {
       'lower_leg',
       'upper_arm',
       'lower_arm',
-    ]
+    ] as const
     for (const key of keys) {
       const a = key_step[key].position.x.toFixed(
         Constants.replay_key_step_precision
